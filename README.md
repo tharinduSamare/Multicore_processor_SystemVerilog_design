@@ -1,1 +1,0 @@
-# Multicore_processor_matrix_multiply
