@@ -1,4 +1,4 @@
-module controlUnit_tb();
+module controlUnit_tb import details::*();
 
 timeunit 1ns;
 timeprecision 1ps;
@@ -14,10 +14,10 @@ end
 
 logic clk,rstN,start,Zout;
 logic[IR_WIDTH-1:0]ins;
-logic [2:0]aluOp;
+alu_op_t aluOp;
 logic [3:0]incReg;    // {PC, RC, RP, RQ}
 logic [9:0]wrEnReg;   // {AR, R, PC, IR, RL, RC, RP, RQ, R1, AC}
-logic [3:0]busSel;
+bus_in_sel_t busSel;
 logic dMemWrEn,ZWrEn;
 logic done,ready;
 

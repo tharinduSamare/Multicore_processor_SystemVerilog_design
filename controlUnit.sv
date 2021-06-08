@@ -116,6 +116,26 @@ typedef enum logic [IR_WIDTH-1:0]{
 ins_t instruction;
 assign instruction = ins_t'(ins); // type cast ins to instruction to use the enums
 
+localparam    // control signal values for register increment of incregisters
+        no_inc = 4'b0000,
+        PC_inc = 4'b1000,
+        RC_inc = 4'b0100,
+        RP_inc = 4'b0010,
+        RQ_inc = 4'b0001;
+
+localparam // control signal values for write enable registers 
+        no_wrEn = 10'b0000000000,
+        AR_wrEn = 10'b1000000000,
+        R_wrEn  = 10'b0100000000,
+        PC_wrEn = 10'b0010000000,
+        IR_wrEn = 10'b0001000000,
+        RL_wrEn = 10'b0000100000,
+        RC_wrEn = 10'b0000010000,
+        RP_wrEn = 10'b0000001000,
+        RQ_wrEn = 10'b0000000100,
+        R1_wrEn = 10'b0000000010,
+        AC_wrEn = 10'b0000000001;
+
 states_t currentState, nextState;
 
 always_ff @(posedge clk) begin
@@ -243,8 +263,8 @@ always_comb begin
     unique case(currentState)
         IDLE: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'd0;
+            incReg <= no_inc;
+            wrEnReg <= no_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -252,8 +272,8 @@ always_comb begin
 
         NOP1: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'd0;
+            incReg <= no_inc;
+            wrEnReg <= no_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -261,8 +281,8 @@ always_comb begin
 
         ENDOP1: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'd0;
+            incReg <= no_inc;
+            wrEnReg <= no_wrEn;
             busSel <= DMem_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -270,8 +290,8 @@ always_comb begin
 
         CLAC1: begin
             aluOp <= clr_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'd1;
+            incReg <= no_inc;
+            wrEnReg <= AC_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b1;
@@ -279,8 +299,8 @@ always_comb begin
 
         FETCH_DELAY1: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'b0001000000;
+            incReg <= no_inc;
+            wrEnReg <= IR_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -288,8 +308,8 @@ always_comb begin
 
         FETCH1: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'b0001000000;
+            incReg <= no_inc;
+            wrEnReg <= IR_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -297,8 +317,8 @@ always_comb begin
 
         FETCH2: begin
             aluOp <= idle_alu;
-            incReg <= 4'b1000;
-            wrEnReg <= 10'd0;
+            incReg <= PC_inc;
+            wrEnReg <= no_wrEn;
             busSel <= DMem_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -306,8 +326,8 @@ always_comb begin
 
         LDIAC_DELAY1: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'b0001000000;
+            incReg <= no_inc;
+            wrEnReg <= IR_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -315,8 +335,8 @@ always_comb begin
 
         LDIAC1: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'b0001000000;
+            incReg <= no_inc;
+            wrEnReg <= IR_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -324,8 +344,8 @@ always_comb begin
 
         LDIAC2: begin
             aluOp <= idle_alu;
-            incReg <= 4'b1000;
-            wrEnReg <= 10'b1000000000;
+            incReg <= PC_inc;
+            wrEnReg <= AR_wrEn;
             busSel <= IR_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -333,8 +353,8 @@ always_comb begin
 
         LDIAC_DELAY2: begin
             aluOp <= pass_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000001;
+            incReg <= no_inc;
+            wrEnReg <= AC_wrEn;
             busSel <= DMem_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b1;
@@ -342,8 +362,8 @@ always_comb begin
 
         LDIAC3: begin
             aluOp <= pass_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000001;
+            incReg <= no_inc;
+            wrEnReg <= AC_wrEn;
             busSel <= DMem_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b1;
@@ -351,8 +371,8 @@ always_comb begin
 
         LDAC1: begin
             aluOp <= idle_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b1000000000;
+            incReg <= no_inc;
+            wrEnReg <= AR_wrEn;
             busSel <= AC_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -360,8 +380,8 @@ always_comb begin
 
         LDAC_DELAY1: begin
             aluOp <= pass_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000001;
+            incReg <= no_inc;
+            wrEnReg <= AC_wrEn;
             busSel <= DMem_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b1;
@@ -369,8 +389,8 @@ always_comb begin
 
         LDAC2: begin
             aluOp <= pass_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000001;
+            incReg <= no_inc;
+            wrEnReg <= AC_wrEn;
             busSel <= DMem_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b1;
@@ -378,8 +398,8 @@ always_comb begin
 
         STR1: begin
             aluOp <= idle_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b1000000000;
+            incReg <= no_inc;
+            wrEnReg <= AR_wrEn;
             busSel <= AC_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -387,8 +407,8 @@ always_comb begin
 
         STR_DELAY1: begin
             aluOp <= idle_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000000;
+            incReg <= no_inc;
+            wrEnReg <= no_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b1;
             ZWrEn <= 1'b0;
@@ -396,8 +416,8 @@ always_comb begin
 
         STR2: begin
             aluOp <= idle_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000000;
+            incReg <= no_inc;
+            wrEnReg <= no_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b1;
             ZWrEn <= 1'b0;
@@ -405,8 +425,8 @@ always_comb begin
 
         STIR_DELAY1: begin
             aluOp <= idle_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0001000000;
+            incReg <= no_inc;
+            wrEnReg <= IR_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -414,8 +434,8 @@ always_comb begin
 
         STIR1: begin
             aluOp <= idle_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0001000000;
+            incReg <= no_inc;
+            wrEnReg <= IR_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -423,8 +443,8 @@ always_comb begin
 
         STIR2: begin
             aluOp <= idle_alu;
-            incReg <= 4'b1000;
-            wrEnReg <= 10'b1000000000;
+            incReg <= PC_inc;
+            wrEnReg <= AR_wrEn;
             busSel <= IR_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -432,8 +452,8 @@ always_comb begin
 
         STIR_DELAY2: begin
             aluOp <= idle_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000000;
+            incReg <= no_inc;
+            wrEnReg <= no_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b1;
             ZWrEn <= 1'b0;
@@ -441,8 +461,8 @@ always_comb begin
 
         STIR3: begin
             aluOp <= idle_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000000;
+            incReg <= no_inc;
+            wrEnReg <= no_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b1;
             ZWrEn <= 1'b0;
@@ -450,8 +470,8 @@ always_comb begin
 
         JUMP_DELAY1: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'b0001000000;
+            incReg <= no_inc;
+            wrEnReg <= IR_wrEn;
             busSel <= DMem_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -459,8 +479,8 @@ always_comb begin
 
         JUMP1: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'b0001000000;
+            incReg <= no_inc;
+            wrEnReg <= IR_wrEn;
             busSel <= DMem_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -468,8 +488,8 @@ always_comb begin
 
         JUMP2: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'b0010000000;
+            incReg <= no_inc;
+            wrEnReg <= PC_wrEn;
             busSel <= IR_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -477,8 +497,8 @@ always_comb begin
 
         JMPNZY_DILAY1: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'b0001000000;
+            incReg <= no_inc;
+            wrEnReg <= IR_wrEn;
             busSel <= DMem_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -486,8 +506,8 @@ always_comb begin
 
         JMPNZY1: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'b0001000000;
+            incReg <= no_inc;
+            wrEnReg <= IR_wrEn;
             busSel <= DMem_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -495,8 +515,8 @@ always_comb begin
 
         JMPNZY2: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'b0010000000;
+            incReg <= no_inc;
+            wrEnReg <= PC_wrEn;
             busSel <= IR_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -504,8 +524,8 @@ always_comb begin
 
         JMPNZN1: begin
             aluOp <= idle_alu;
-            incReg <= 4'b1000;
-            wrEnReg <= 10'b0000000000;
+            incReg <= PC_inc;
+            wrEnReg <= no_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -513,8 +533,8 @@ always_comb begin
 
         JMPZY_DELAY1: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'b0001000000;
+            incReg <= no_inc;
+            wrEnReg <= IR_wrEn;
             busSel <= DMem_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -522,8 +542,8 @@ always_comb begin
 
         JMPZY1: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'b0001000000;
+            incReg <= no_inc;
+            wrEnReg <= IR_wrEn;
             busSel <= DMem_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -531,8 +551,8 @@ always_comb begin
 
         JMPZY2: begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'b0010000000;
+            incReg <= no_inc;
+            wrEnReg <= PC_wrEn;
             busSel <= IR_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -540,8 +560,8 @@ always_comb begin
 
         JMPZN1: begin
             aluOp <= idle_alu;
-            incReg <= 4'b1000;
-            wrEnReg <= 10'b0000000000;
+            incReg <= PC_inc;
+            wrEnReg <= no_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -549,8 +569,8 @@ always_comb begin
 
         MUL1: begin
             aluOp <= mul_alu;
-            incReg <= 4'b0111;
-            wrEnReg <= 10'b0000000001;
+            incReg <= RC_inc|RP_inc|RQ_inc;
+            wrEnReg <= AC_wrEn;
             busSel <= R1_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b1;
@@ -558,8 +578,8 @@ always_comb begin
 
         ADD1: begin
             aluOp <= add_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000001;
+            incReg <= no_inc;
+            wrEnReg <= AC_wrEn;
             busSel <= R_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b1;
@@ -567,8 +587,8 @@ always_comb begin
 
         SUB1: begin
             aluOp <= sub_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000001;
+            incReg <= no_inc;
+            wrEnReg <= AC_wrEn;
             busSel <= RC_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b1;
@@ -576,8 +596,8 @@ always_comb begin
 
         INCAC1: begin
             aluOp <= inc_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000001;
+            incReg <= no_inc;
+            wrEnReg <= AC_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b1;
@@ -585,8 +605,8 @@ always_comb begin
 
         MV_RL_AC1: begin
             aluOp <= idle_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000100000;
+            incReg <= no_inc;
+            wrEnReg <= RL_wrEn;
             busSel <= AC_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -594,8 +614,8 @@ always_comb begin
 
         MV_RP_AC1: begin
             aluOp <= idle_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000001000;
+            incReg <= no_inc;
+            wrEnReg <= RP_wrEn;
             busSel <= AC_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -603,8 +623,8 @@ always_comb begin
 
         MV_RQ_AC1: begin
             aluOp <= idle_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000100;
+            incReg <= no_inc;
+            wrEnReg <= RQ_wrEn;
             busSel <= AC_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -612,8 +632,8 @@ always_comb begin
 
         MV_RC_AC1: begin
             aluOp <= idle_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000010000;
+            incReg <= no_inc;
+            wrEnReg <= RC_wrEn;
             busSel <= AC_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -621,8 +641,8 @@ always_comb begin
 
         MV_R_AC1: begin
             aluOp <= idle_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0100000000;
+            incReg <= no_inc;
+            wrEnReg <= R_wrEn;
             busSel <= AC_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -630,8 +650,8 @@ always_comb begin
 
         MV_R1_AC1: begin
             aluOp <= idle_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000010;
+            incReg <= no_inc;
+            wrEnReg <= R1_wrEn;
             busSel <= AC_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
@@ -639,8 +659,8 @@ always_comb begin
 
         MV_AC_RP1: begin
             aluOp <= pass_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000001;
+            incReg <= no_inc;
+            wrEnReg <= AC_wrEn;
             busSel <= RP_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b1;
@@ -648,8 +668,8 @@ always_comb begin
 
         MV_AC_RQ1: begin
             aluOp <= pass_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000001;
+            incReg <= no_inc;
+            wrEnReg <= AC_wrEn;
             busSel <= RQ_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b1;
@@ -657,8 +677,8 @@ always_comb begin
 
         MV_AC_RL1: begin
             aluOp <= pass_alu;
-            incReg <= 4'b0000;
-            wrEnReg <= 10'b0000000001;
+            incReg <= no_inc;
+            wrEnReg <= AC_wrEn;
             busSel <= RL_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b1;
@@ -666,8 +686,8 @@ always_comb begin
 
         default : begin
             aluOp <= idle_alu;
-            incReg <= 4'd0;
-            wrEnReg <= 10'd0;
+            incReg <= no_inc;
+            wrEnReg <= no_wrEn;
             busSel <= idle_bus;
             DataMemWrEn <= 1'b0;
             ZWrEn <= 1'b0;
