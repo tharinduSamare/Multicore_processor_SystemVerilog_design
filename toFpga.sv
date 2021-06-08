@@ -154,15 +154,15 @@ generate
     end
 endgenerate
 
-//  RAM #(.WIDTH(INS_WIDTH), .DEPTH(INS_MEM_DEPTH)) IM(.clk(CLOCK_50), .wrEn(uart_InsMemWrEn), .dataIn(InsMemIn), .addr(insMemAddr), .dataOut(InsMemOut));
+ RAM #(.WIDTH(INS_WIDTH), .DEPTH(INS_MEM_DEPTH)) IM(.clk(CLOCK_50), .wrEn(uart_InsMemWrEn), .dataIn(InsMemIn), .addr(insMemAddr), .dataOut(InsMemOut));
 
-//  RAM #(.WIDTH(DATA_MEM_WIDTH), .DEPTH(DATA_MEM_DEPTH)) DM(.clk(CLOCK_50), .wrEn(dataMemWrEn), .dataIn(DataMemIn), .addr(dataMemAddr), 
-//              .dataOut(DataMemOut));
+ RAM #(.WIDTH(DATA_MEM_WIDTH), .DEPTH(DATA_MEM_DEPTH)) DM(.clk(CLOCK_50), .wrEn(dataMemWrEn), .dataIn(DataMemIn), .addr(dataMemAddr), 
+             .dataOut(DataMemOut));
 
-IP_insMem IP_IM(.address(insMemAddr), .clock(CLOCK_50), .data(InsMemIn), .wren(uart_InsMemWrEn), .q(InsMemOut));
+// IP_insMem IP_IM(.address(insMemAddr), .clock(CLOCK_50), .data(InsMemIn), .wren(uart_InsMemWrEn), .q(InsMemOut));
 
-IP_dataMem IP_DM(.address(dataMemAddr), .clock(CLOCK_50), .data(DataMemIn), .wren(dataMemWrEn), 
-               .q(DataMemOut));
+// IP_dataMem IP_DM(.address(dataMemAddr), .clock(CLOCK_50), .data(DataMemIn), .wren(dataMemWrEn), 
+//                .q(DataMemOut));
 ///////////// communication system
 
 mem_communication_interface #(.MEM_WORD_LENGTH(DATA_MEM_WIDTH), .MEM_DEPTH(DATA_MEM_DEPTH), .UART_WIDTH(UART_WIDTH)) dMem_com_interface
