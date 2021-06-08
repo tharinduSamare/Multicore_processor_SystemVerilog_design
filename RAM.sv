@@ -25,7 +25,7 @@
 
 // endmodule : RAM
 
-module RAM_2
+module RAM
 #(
     parameter WIDTH = 12,
     parameter DEPTH = 256,
@@ -58,4 +58,4 @@ end
 
 assign dataOut = memory[addr_reg];
 
-endmodule : RAM_2
+endmodule : RAM
