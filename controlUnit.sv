@@ -88,42 +88,42 @@ typedef enum logic [5:0] {
 } states_t;
 
 typedef enum logic [IR_WIDTH-1:0]{
-    NOP	=8'd0,
-    ENDOP=	8'd1,
-    CLAC=	8'd2,
-    LDIAC=	8'd3,
-    LDAC=	8'd4,
-    STR=	8'd5,
-    STIR=	8'd6,
-    JUMP=	8'd7,
-    JMPNZ=	8'd8,
-    JMPZ=	8'd9,
-    MUL	=8'd10,
-    ADD	=8'd11,
-    SUB	=8'd12,
-    INCAC	=8'd13,
-    MV_RL_AC=	{4'd1,4'd15},
-    MV_RP_AC=	{4'd2,4'd15},
-    MV_RQ_AC=	{4'd3,4'd15},
-    MV_RC_AC=	{4'd4,4'd15},
-    MV_R_AC =	{4'd5,4'd15},
-    MV_R1_AC=	{4'd6,4'd15},
-    MV_AC_RP=	{4'd7,4'd15},
-    MV_AC_RQ=	{4'd8,4'd15},
-    MV_AC_RL=	{4'd9,4'd15}
-} ins_t;
+    NOP 	    =   8'd0,
+    ENDOP       =	8'd1,
+    CLAC        =	8'd2,
+    LDIAC       =	8'd3,
+    LDAC        =	8'd4,
+    STR         =	8'd5,
+    STIR        =	8'd6,
+    JUMP        =	8'd7,
+    JMPNZ       =	8'd8,
+    JMPZ        =	8'd9,
+    MUL	        =   8'd10,
+    ADD	        =   8'd11,
+    SUB	        =   8'd12,
+    INCAC	    =   8'd13,
+    MV_RL_AC    =	{4'd1,4'd15},
+    MV_RP_AC    =	{4'd2,4'd15},
+    MV_RQ_AC    =	{4'd3,4'd15},
+    MV_RC_AC    =	{4'd4,4'd15},
+    MV_R_AC     =	{4'd5,4'd15},
+    MV_R1_AC    =	{4'd6,4'd15},
+    MV_AC_RP    =	{4'd7,4'd15},
+    MV_AC_RQ    =	{4'd8,4'd15},
+    MV_AC_RL    =	{4'd9,4'd15}
+} ins_t;    
 
 ins_t instruction;
 assign instruction = ins_t'(ins); // type cast ins to instruction to use the enums
 
-localparam    // control signal values for register increment of incregisters
+localparam  [3:0]   // control signal values for register increment of incregisters
         no_inc = 4'b0000,
         PC_inc = 4'b1000,
         RC_inc = 4'b0100,
         RP_inc = 4'b0010,
         RQ_inc = 4'b0001;
 
-localparam // control signal values for write enable registers 
+localparam [9:0]// control signal values for write enable registers 
         no_wrEn = 10'b0000000000,
         AR_wrEn = 10'b1000000000,
         R_wrEn  = 10'b0100000000,
@@ -135,6 +135,7 @@ localparam // control signal values for write enable registers
         RQ_wrEn = 10'b0000000100,
         R1_wrEn = 10'b0000000010,
         AC_wrEn = 10'b0000000001;
+
 
 states_t currentState, nextState;
 
