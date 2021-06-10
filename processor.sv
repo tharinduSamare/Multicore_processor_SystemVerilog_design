@@ -20,15 +20,15 @@ logic [REG_WIDTH-1:0]busOut;
 logic [INS_WIDTH-1:0]IRout;
 logic [REG_WIDTH-1:0] Rout, RLout, RCout, RPout, RQout, R1out, ACout;
 logic Zout, ZWrEn;
-logic [3:0]incReg;    // {PC, RC, RP, RQ}
+inc_reg_t incReg;    // {PC, RC, RP, RQ}
 logic PC_inc, RC_inc, RP_inc, RQ_inc;
-logic [9:0]wrEnReg;   // {AR, R, PC, IR, RL, RC, RP, RQ, R1, AC}
+wrEnReg_t wrEnReg;   // {AR, R, PC, IR, RL, RC, RP, RQ, R1, AC}
 logic AR_wrEn,R_wrEn,PC_wrEn,IR_wrEn,RL_wrEn,RC_wrEn,RP_wrEn,RQ_wrEn,R1_wrEn,AC_wrEn;
 
 assign {PC_inc, RC_inc, RP_inc, RQ_inc} = incReg;
 assign {AR_wrEn,R_wrEn,PC_wrEn,IR_wrEn,RL_wrEn,RC_wrEn,RP_wrEn,RQ_wrEn,R1_wrEn,AC_wrEn} = wrEnReg;
 
-controlUnit CU(.clk, .rstN, .start, .Zout, .ins(IRout), .aluOp(select_alu_op), .incReg,
+controlUnit CU(.clk, .rstN, .start, .Zout, .instruction(ISA_t'(IRout)), .aluOp(select_alu_op), .incReg,
                 .wrEnReg, .busSel, .DataMemWrEn, .ZWrEn, .done, .ready);
 
 alu #(.WIDTH(REG_WIDTH)) alu(.a(alu_a), .b(alu_b), .selectOp(select_alu_op), .c(alu_out));

@@ -15,39 +15,14 @@ end
 localparam IR_WIDTH = 8;
 
 logic rstN,start,Zout;
-logic[IR_WIDTH-1:0]ins;
+ISA_t instruction;
 alu_op_t aluOp;
-logic [3:0]incReg;    // {PC, RC, RP, RQ}
-logic [9:0]wrEnReg;   // {AR, R, PC, IR, RL, RC, RP, RQ, R1, AC}
+inc_reg_t incReg;    // {PC, RC, RP, RQ}
+wrEnReg_t wrEnReg;   // {AR, R, PC, IR, RL, RC, RP, RQ, R1, AC}
 bus_in_sel_t busSel;
 logic DataMemWrEn,ZWrEn;
 logic done,ready;
 
-
-localparam  //IDLE	= 8'd0,   //instruction set
-            NOP	=8'd0,
-            ENDOP=	8'd1,
-            CLAC=	8'd2,
-            LDIAC=	8'd3,
-            LDAC=	8'd4,
-            STR=	8'd5,
-            STIR=	8'd6,
-            JUMP=	8'd7,
-            JMPNZ=	8'd8,
-            JMPZ=	8'd9,
-            MUL	=8'd10,
-            ADD	=8'd11,
-            SUB	=8'd12,
-            INCAC	=8'd13,
-            MV_RL_AC=	{4'd1,4'd15},
-            MV_RP_AC=	{4'd2,4'd15},
-            MV_RQ_AC=	{4'd3,4'd15},
-            MV_RC_AC=	{4'd4,4'd15},
-            MV_R_AC =	{4'd5,4'd15},
-            MV_R1_AC=	{4'd6,4'd15},
-            MV_AC_RP=	{4'd7,4'd15},
-            MV_AC_RQ=	{4'd8,4'd15},
-            MV_AC_RL=	{4'd9,4'd15};
 
 localparam // time duration for each instruction to exicute
         NOP_time_duration 	    =   4,
@@ -80,76 +55,20 @@ localparam // time duration for each instruction to exicute
 controlUnit #(.IR_WIDTH(IR_WIDTH)) dut(.*);
 
 ////////// for easy readability (start) //////////////
-typedef enum logic [IR_WIDTH-1:0] { 
-    _NOP	=8'd0,
-    _ENDOP=	8'd1,
-    _CLAC=	8'd2,
-    _LDIAC=	8'd3,
-    _LDAC=	8'd4,
-    _STR=	8'd5,
-    _STIR=	8'd6,
-    _JUMP=	8'd7,
-    _JMPNZ=	8'd8,
-    _JMPZ=	8'd9,
-    _MUL	=8'd10,
-    _ADD	=8'd11,
-    _SUB	=8'd12,
-    _INCAC	=8'd13,
-    _MV_RL_AC=	{4'd1,4'd15},
-    _MV_RP_AC=	{4'd2,4'd15},
-    _MV_RQ_AC=	{4'd3,4'd15},
-    _MV_RC_AC=	{4'd4,4'd15},
-    _MV_R_AC =	{4'd5,4'd15},
-    _MV_R1_AC=	{4'd6,4'd15},
-    _MV_AC_RP=	{4'd7,4'd15},
-    _MV_AC_RQ=	{4'd8,4'd15},
-    _MV_AC_RL=	{4'd9,4'd15}
- } instruction_t;
-
-typedef enum logic [3:0] { 
-    _no_inc = 4'b0000,
-    _PC_inc = 4'b1000,
-    _RC_inc = 4'b0100,
-    _RP_inc = 4'b0010,
-    _RQ_inc = 4'b0001,
-    _RC_RP_RQ_inc = 4'b0111
- } inc_reg_t;
-
-typedef enum logic [9:0] { 
-    _no_wrEn = 10'b0000000000,
-    _AR_wrEn = 10'b1000000000,
-    _R_wrEn  = 10'b0100000000,
-    _PC_wrEn = 10'b0010000000,
-    _IR_wrEn = 10'b0001000000,
-    _RL_wrEn = 10'b0000100000,
-    _RC_wrEn = 10'b0000010000,
-    _RP_wrEn = 10'b0000001000,
-    _RQ_wrEn = 10'b0000000100,
-    _R1_wrEn = 10'b0000000010,
-    _AC_wrEn = 10'b0000000001
- } wrEnReg_t;
-
-instruction_t instruction_read;
-inc_reg_t  incReg_read;
-wrEnReg_t wrEnReg_read;
-
-assign instruction_read = instruction_t'(ins);
-assign incReg_read  =   inc_reg_t'(incReg);
-assign wrEnReg_read =   wrEnReg_t'(wrEnReg);
 
 ///////// for easy readability (end) ////////////////
 
 
 task automatic test_instruction(
     input int duration,
-    input logic [IR_WIDTH-1:0] instruction, 
+    input ISA_t ins, 
     input logic Z_value,
-    ref logic [IR_WIDTH-1:0] ins,
+    ref ISA_t instruction,
     ref logic Zout
 );
     
     @(posedge clk);
-    ins = instruction;
+    instruction = ins;
     Zout = Z_value;
 
     #(duration * CLK_PERIOD);
@@ -166,79 +85,79 @@ initial begin
     start <= 1'b1;
 
     ////// test NOP
-    test_instruction(.duration(NOP_time_duration), .instruction(NOP), .Z_value(1'bX), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(NOP_time_duration), .ins(NOP), .Z_value(1'bX), .instruction(instruction), .Zout(Zout));
 
     ///// test CLAC
-    test_instruction(.duration(CLAC_time_duration), .instruction(CLAC),  .Z_value(1'bX), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(CLAC_time_duration), .ins(CLAC),  .Z_value(1'bX), .instruction(instruction), .Zout(Zout));
 
     ///// test LDIAC
-    test_instruction(.duration(LDIAC_time_duration), .instruction(LDIAC), .Z_value(1'bX), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(LDIAC_time_duration), .ins(LDIAC), .Z_value(1'bX), .instruction(instruction), .Zout(Zout));
 
     ////// test LDAC
-    test_instruction(.duration(LDAC_time_duration), .instruction(LDAC), .Z_value(1'bX), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(LDAC_time_duration), .ins(LDAC), .Z_value(1'bX), .instruction(instruction), .Zout(Zout));
 
     ////// test STR
-    test_instruction(.duration(STR_time_duration), .instruction(STR), .Z_value(1'bX), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(STR_time_duration), .ins(STR), .Z_value(1'bX), .instruction(instruction), .Zout(Zout));
 
     ////// test STIR
-    test_instruction(.duration(STIR_time_duration), .instruction(STIR), .Z_value(1'bX), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(STIR_time_duration), .ins(STIR), .Z_value(1'bX), .instruction(instruction), .Zout(Zout));
 
     ////// test JUMP
-    test_instruction(.duration(JUMP_time_duration), .instruction(JUMP), .Z_value(1'bX), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(JUMP_time_duration), .ins(JUMP), .Z_value(1'bX), .instruction(instruction), .Zout(Zout));
 
     ////// test JMPNZ_Y
-    test_instruction(.duration(JMPNZ_Y_time_duration), .instruction(JMPNZ), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(JMPNZ_Y_time_duration), .ins(JMPNZ), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ////// test JMPNZ_N
-    test_instruction(.duration(JMPNZ_N_time_duration), .instruction(JMPNZ), .Z_value(1'b1), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(JMPNZ_N_time_duration), .ins(JMPNZ), .Z_value(1'b1), .instruction(instruction), .Zout(Zout));
 
     ////// test JMPZ_Y
-    test_instruction(.duration(JMPZ_Y_time_duration), .instruction(JMPZ), .Z_value(1'b1), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(JMPZ_Y_time_duration), .ins(JMPZ), .Z_value(1'b1), .instruction(instruction), .Zout(Zout));
 
     ////// test JMPZ_N
-    test_instruction(.duration(JMPZ_N_time_duration), .instruction(JMPZ), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(JMPZ_N_time_duration), .ins(JMPZ), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ////// test MUL
-    test_instruction(.duration(MUL_time_duration), .instruction(MUL), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(MUL_time_duration), .ins(MUL), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ////// test ADD
-    test_instruction(.duration(ADD_time_duration), .instruction(ADD), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(ADD_time_duration), .ins(ADD), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ////// test SUB
-    test_instruction(.duration(SUB_time_duration), .instruction(SUB), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(SUB_time_duration), .ins(SUB), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ////// test INCAC
-    test_instruction(.duration(INCAC_time_duration), .instruction(INCAC), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(INCAC_time_duration), .ins(INCAC), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ////// test MV_RL_AC
-    test_instruction(.duration(MV_RL_AC_time_duration), .instruction(MV_RL_AC), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(MV_RL_AC_time_duration), .ins(MV_RL_AC), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ////// test MV_RP_AC
-    test_instruction(.duration(MV_RP_AC_time_duration), .instruction(MV_RP_AC), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(MV_RP_AC_time_duration), .ins(MV_RP_AC), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ////// test MV_RQ_AC
-    test_instruction(.duration(MV_RQ_AC_time_duration), .instruction(MV_RQ_AC), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(MV_RQ_AC_time_duration), .ins(MV_RQ_AC), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ////// test MV_RC_AC
-    test_instruction(.duration(MV_RC_AC_time_duration), .instruction(MV_RC_AC), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(MV_RC_AC_time_duration), .ins(MV_RC_AC), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ////// test MV_R_AC
-    test_instruction(.duration(MV_R_AC_time_duration), .instruction(MV_R_AC), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(MV_R_AC_time_duration), .ins(MV_R_AC), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ////// test MV_R1_AC
-    test_instruction(.duration(MV_R1_AC_time_duration), .instruction(MV_R1_AC), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(MV_R1_AC_time_duration), .ins(MV_R1_AC), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ////// test MV_AC_RP
-    test_instruction(.duration(MV_AC_RP_time_duration), .instruction(MV_AC_RP), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(MV_AC_RP_time_duration), .ins(MV_AC_RP), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ////// test MV_AC_RQ
-    test_instruction(.duration(MV_AC_RQ_time_duration), .instruction(MV_AC_RQ), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(MV_AC_RQ_time_duration), .ins(MV_AC_RQ), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ////// test MV_AC_RL
-    test_instruction(.duration(MV_AC_RL_time_duration), .instruction(MV_AC_RL), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(MV_AC_RL_time_duration), .ins(MV_AC_RL), .Z_value(1'b0), .instruction(instruction), .Zout(Zout));
 
     ///// test ENDOP
-    test_instruction(.duration(ENDOP_time_duration), .instruction(ENDOP), .Z_value(1'bX), .ins(ins), .Zout(Zout));
+    test_instruction(.duration(ENDOP_time_duration), .ins(ENDOP), .Z_value(1'bX), .instruction(instruction), .Zout(Zout));
 
 end
 
