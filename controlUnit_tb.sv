@@ -49,9 +49,6 @@ localparam  //IDLE	= 8'd0,   //instruction set
             MV_AC_RQ=	{4'd8,4'd15},
             MV_AC_RL=	{4'd9,4'd15};
 
-
-
-
 localparam // time duration for each instruction to exicute
         NOP_time_duration 	    =   4,
         ENDOP_time_duration     =   4,
@@ -82,6 +79,66 @@ localparam // time duration for each instruction to exicute
 
 controlUnit #(.IR_WIDTH(IR_WIDTH)) dut(.*);
 
+////////// for easy readability (start) //////////////
+typedef enum logic [IR_WIDTH-1:0] { 
+    _NOP	=8'd0,
+    _ENDOP=	8'd1,
+    _CLAC=	8'd2,
+    _LDIAC=	8'd3,
+    _LDAC=	8'd4,
+    _STR=	8'd5,
+    _STIR=	8'd6,
+    _JUMP=	8'd7,
+    _JMPNZ=	8'd8,
+    _JMPZ=	8'd9,
+    _MUL	=8'd10,
+    _ADD	=8'd11,
+    _SUB	=8'd12,
+    _INCAC	=8'd13,
+    _MV_RL_AC=	{4'd1,4'd15},
+    _MV_RP_AC=	{4'd2,4'd15},
+    _MV_RQ_AC=	{4'd3,4'd15},
+    _MV_RC_AC=	{4'd4,4'd15},
+    _MV_R_AC =	{4'd5,4'd15},
+    _MV_R1_AC=	{4'd6,4'd15},
+    _MV_AC_RP=	{4'd7,4'd15},
+    _MV_AC_RQ=	{4'd8,4'd15},
+    _MV_AC_RL=	{4'd9,4'd15}
+ } instruction_t;
+
+typedef enum logic [3:0] { 
+    _no_inc = 4'b0000,
+    _PC_inc = 4'b1000,
+    _RC_inc = 4'b0100,
+    _RP_inc = 4'b0010,
+    _RQ_inc = 4'b0001,
+    _RC_RP_RQ_inc = 4'b0111
+ } inc_reg_t;
+
+typedef enum logic [9:0] { 
+    _no_wrEn = 10'b0000000000,
+    _AR_wrEn = 10'b1000000000,
+    _R_wrEn  = 10'b0100000000,
+    _PC_wrEn = 10'b0010000000,
+    _IR_wrEn = 10'b0001000000,
+    _RL_wrEn = 10'b0000100000,
+    _RC_wrEn = 10'b0000010000,
+    _RP_wrEn = 10'b0000001000,
+    _RQ_wrEn = 10'b0000000100,
+    _R1_wrEn = 10'b0000000010,
+    _AC_wrEn = 10'b0000000001
+ } wrEnReg_t;
+
+instruction_t instruction_read;
+inc_reg_t  incReg_read;
+wrEnReg_t wrEnReg_read;
+
+assign instruction_read = instruction_t'(ins);
+assign incReg_read  =   inc_reg_t'(incReg);
+assign wrEnReg_read =   wrEnReg_t'(wrEnReg);
+
+///////// for easy readability (end) ////////////////
+
 
 task automatic test_instruction(
     input int duration,
@@ -110,9 +167,6 @@ initial begin
 
     ////// test NOP
     test_instruction(.duration(NOP_time_duration), .instruction(NOP), .Z_value(1'bX), .ins(ins), .Zout(Zout));
-
-    ///// test ENDOP
-    // test_instruction(.duration(ENDOP_time_duration), .instruction(ENDOP), .Z_value(1'bX), .ins(ins), .Zout(Zout));
 
     ///// test CLAC
     test_instruction(.duration(CLAC_time_duration), .instruction(CLAC),  .Z_value(1'bX), .ins(ins), .Zout(Zout));
@@ -182,6 +236,9 @@ initial begin
 
     ////// test MV_AC_RL
     test_instruction(.duration(MV_AC_RL_time_duration), .instruction(MV_AC_RL), .Z_value(1'b0), .ins(ins), .Zout(Zout));
+
+    ///// test ENDOP
+    test_instruction(.duration(ENDOP_time_duration), .instruction(ENDOP), .Z_value(1'bX), .ins(ins), .Zout(Zout));
 
 end
 
