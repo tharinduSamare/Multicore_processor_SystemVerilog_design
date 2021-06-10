@@ -8,6 +8,7 @@ typedef logic [WIDTH-1:0] memory_t [0:DEPTH-1];
 
 
 
+
 endclass
 
 
