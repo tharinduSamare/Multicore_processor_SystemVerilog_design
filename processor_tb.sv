@@ -1,3 +1,16 @@
+class RAM_class #(parameter WIDTH, DEPTH);
+
+typedef logic [WIDTH-1:0] memory_t [0:DEPTH-1];
+
+
+
+
+
+
+
+endclass
+
+
 module processor_tb import details::*;();
 
 timeunit 1ns;
