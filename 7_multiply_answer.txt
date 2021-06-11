@@ -1,0 +1,13 @@
+// memory data file (do not edit the following line - required for mem load use)
+// instance=/processor_tb/aa
+// format=hex addressradix=h dataradix=h version=1.0 wordsperline=1 noaddress
+01
+16
+21
+2d
+35
+06
+01
+17
+0b
+21

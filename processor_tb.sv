@@ -80,8 +80,8 @@ logic [INS_WIDTH-1:0]temp_ins_mem[0:INS_MEM_DEPTH-1];
 logic [REG_WIDTH-1:0]temp_data_mem[0:DATA_MEM_DEPTH-1];
 
 initial begin
-    $readmemb("9_ins_mem_tb.txt", temp_ins_mem);
-    $readmemb("4_data_mem_tb.txt", temp_data_mem);
+    $readmemb("../../9_ins_mem_tb.txt", temp_ins_mem);
+    $readmemb("../../4_data_mem_tb.txt", temp_data_mem);
     ins_mem.initialize_full_memory(temp_ins_mem);
     data_mem.initialize_full_memory(temp_data_mem);    
 end 
@@ -116,6 +116,8 @@ localparam  Q_end_addr_location = DATA_MEM_ADDR_WIDTH'(12'd7),
             R_end_addr_location = DATA_MEM_ADDR_WIDTH'(12'd8);
 logic [REG_WIDTH-1:0] a, b, c, P_start_addr, Q_start_addr, R_start_addr, P_end_addr, Q_end_addr, R_end_addr;
 
+// logic [7:0]aa[0:4][0:1] = '{'{8'd1,8'd22},'{8'd33,8'd45},'{8'd53,8'd6},'{8'd1,8'd23},'{8'd11,8'd33}};
+logic [REG_WIDTH-1:0] temp_data_mem_2[0:DATA_MEM_DEPTH-1];
 
 always_ff @(posedge clk) begin
     if (done) begin
@@ -130,6 +132,9 @@ always_ff @(posedge clk) begin
         R_end_addr = data_mem.get_value(DATA_MEM_ADDR_WIDTH'(12'd8));
 
         
+        temp_data_mem_2 = data_mem.RAM;
+        $writememh("../../7_multiply_answer.txt", temp_data_mem_2, R_start_addr,R_end_addr); // write answer matrix to a file
+        // $writememh("../../7_multiply_answer.txt", aa);
 
         $display("\nMatrix P\n");
         print_matrix_P(data_mem.RAM, a,b,P_start_addr, P_end_addr);
@@ -171,6 +176,7 @@ function void print_matrix_R(input logic [REG_WIDTH-1:0]DMEM[0:DATA_MEM_DEPTH-1]
     end
 endfunction 
 
-end
+
+
 
 endmodule : processor_tb
