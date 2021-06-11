@@ -1,5 +1,3 @@
-import serial
-
 def decode(instruction):
     isa = {
         'NOP': '00000000',
@@ -33,6 +31,7 @@ def decode(instruction):
 
 code = open('7_assembly_code.txt','r')
 txt_code = code.read().strip().split('\n')
+machine_code = open('9_ins_mem_tb.txt','w')
 
 decoded_code = []
 i = 0
@@ -65,19 +64,15 @@ while(i<len(txt_code)):
         decoded_code.append(decoded_int)
     i+=1
 
-####################### SEND THROUGH UART ###########################
-uart_list = []
-for i in range(255,-1,-1):
+
+
+for i in range(0,256,1):
     if (i<len(decoded_code)):
-        # print ("    "+str(i)+" :   "+decoded_code[i]+";") #for checking
-        value = (128)*int(decoded_code[i][0]) + (64)*int(decoded_code[i][1]) + (32)*int(decoded_code[i][2]) + (16)*int(decoded_code[i][3]) + (8)*int(decoded_code[i][4]) + (4)*int(decoded_code[i][5]) + (2)*int(decoded_code[i][6]) + (1)*int(decoded_code[i][7])
-        uart_list.append(value)
+        # print (decoded_code[i])
+        machine_code.write(decoded_code[i]+'\n')
     else:
-        # print ("    "+str(i)+" :   "+ "XXXXXXXX"+";") #for checking
-        uart_list.append(0)
+        # print ("XXXXXXXX")
+        machine_code.write("XXXXXXXX"+"\n")
 
-# for i in range (len(uart_list)-1,-1,-1): #for checking
-#     print (255-i, " " ,hex(uart_list[i])),
 
-ser = serial.Serial('COM10',115200,bytesize=8)
-ser.write(uart_list[::-1])
+machine_code.close()

@@ -21,12 +21,22 @@ task Read_memory(input addr_t addr, output data_t value);        // if needed re
     value = RAM[addr];
 endtask
 
-task Write_memory(input addr_t addr, input data_t data, input logic wrEn, input ref clk); // if needed write time delay can be added
+task Write_memory(input addr_t addr, input data_t data, input logic wrEn, ref logic clk); // if needed write time delay can be added
     @(posedge clk);
     if (wrEn) begin
         RAM[addr] = data;
     end
 endtask
+
+function display_RAM();
+    foreach(this.RAM[i])
+        $display(i,this.RAM[i]);
+
+endfunction
+
+function data_t get_value(input addr_t addr);
+    return RAM[addr];
+endfunction
 
 endclass
 
@@ -47,8 +57,10 @@ end
 
 localparam REG_WIDTH = 12;
 localparam INS_WIDTH = 8;
-localparam INS_DEPTH = 256;
-localparam DATA_DEPTH = 4096;
+localparam INS_MEM_DEPTH = 256;
+localparam DATA_MEM_DEPTH = 4096;
+localparam DATA_MEM_ADDR_WIDTH = $clog2(DATA_MEM_DEPTH);
+localparam INS_MEM_ADDR_WIDTH = $clog2(INS_MEM_DEPTH);
 
 logic rstN,start;
 logic [REG_WIDTH-1:0]DataMemOut;
@@ -61,15 +73,99 @@ logic  done,ready;
 processor #(.REG_WIDTH(REG_WIDTH), .INS_WIDTH(INS_WIDTH))dut(.*);
 
 ///// initialize instruction and data memory /////////
-RAM_class #(.REG_WIDTH(INS_WIDTH), .DEPTH(INS_DEPTH)) ins_mem = new;
-RAM_class #(.REG_WIDTH(DATA_WIDTH), .DEPTH(DATA_DEPTH)) data_mem = new;
+RAM_class #(.WIDTH(INS_WIDTH), .DEPTH(INS_MEM_DEPTH)) ins_mem = new;
+RAM_class #(.WIDTH(REG_WIDTH), .DEPTH(DATA_MEM_DEPTH)) data_mem = new;
+
+logic [INS_WIDTH-1:0]temp_ins_mem[0:INS_MEM_DEPTH-1];
+logic [REG_WIDTH-1:0]temp_data_mem[0:DATA_MEM_DEPTH-1];
+
+initial begin
+    $readmemb("9_ins_mem_tb.txt", temp_ins_mem);
+    $readmemb("4_data_mem_tb.txt", temp_data_mem);
+    ins_mem.initialize_full_memory(temp_ins_mem);
+    data_mem.initialize_full_memory(temp_data_mem);    
+end 
 
 
+initial begin
+    @(posedge clk);
+    rstN <= 1'b0;
+    start <= 1'b0;
+    @(posedge clk);
+    rstN <= 1'b1;
+    start <= 1'b1;
+end
+
+always_ff @(posedge clk) begin
+    ins_mem.Read_memory(.addr(insMemAddr), .value(InsMemOut));
+end
+
+always_ff @(posedge clk) begin
+    data_mem.Read_memory(.addr(dataMemAddr), .value(DataMemOut));
+end
+
+always_ff @(posedge clk) begin
+    data_mem.Write_memory(.addr(dataMemAddr), .data(DataMemIn), .wrEn(DataMemWrEn), .clk(clk));
+end
 
 
+////////////// verification of the simulation correctness /////////
+localparam  Q_end_addr_location = DATA_MEM_ADDR_WIDTH'(12'd7),
+            R_start_addr_location = DATA_MEM_ADDR_WIDTH'(12'd5),
+            R_end_addr_location = DATA_MEM_ADDR_WIDTH'(12'd8);
+logic [REG_WIDTH-1:0] a, b, c, P_start_addr, Q_start_addr, R_start_addr, P_end_addr, Q_end_addr, R_end_addr;
 
 
+always_ff @(posedge clk) begin
+    if (done) begin
+        a = data_mem.get_value(DATA_MEM_ADDR_WIDTH'(12'd0));
+        b = data_mem.get_value(DATA_MEM_ADDR_WIDTH'(12'd1));
+        c = data_mem.get_value(DATA_MEM_ADDR_WIDTH'(12'd2));
+        P_start_addr = data_mem.get_value(DATA_MEM_ADDR_WIDTH'(12'd3));
+        Q_start_addr = data_mem.get_value(DATA_MEM_ADDR_WIDTH'(12'd4));
+        R_start_addr = data_mem.get_value(DATA_MEM_ADDR_WIDTH'(12'd5));
+        P_end_addr = data_mem.get_value(DATA_MEM_ADDR_WIDTH'(12'd6));
+        Q_end_addr = data_mem.get_value(DATA_MEM_ADDR_WIDTH'(12'd7));
+        R_end_addr = data_mem.get_value(DATA_MEM_ADDR_WIDTH'(12'd8));
 
+        $display("\nMatrix P\n");
+        print_matrix_P(data_mem.RAM, a,b,P_start_addr, P_end_addr);
+
+        $display("\nMatrix Q\n");
+        print_matrix_Q(data_mem.RAM,b,c,Q_start_addr,Q_end_addr);
+
+        $display("\nMatrix R\n");
+        print_matrix_R(data_mem.RAM,a,c,R_start_addr,R_end_addr);
+        $stop;
+    end
+end
+
+function void print_matrix_P(input logic [REG_WIDTH-1:0]DMEM[0:DATA_MEM_DEPTH-1], logic [REG_WIDTH-1:0]a,b,P_start_addr,P_end_addr);
+    for (int i=P_start_addr;i<P_end_addr;i=i+b) begin
+        for (int j=i;j<i+b;j++) begin
+            $write("%h ", DMEM[j]);
+        end
+        $write("\n");
+    end
+endfunction
+
+function void print_matrix_Q(input logic [REG_WIDTH-1:0]DMEM[0:DATA_MEM_DEPTH-1], logic [REG_WIDTH-1:0]b,c,Q_start_addr,Q_end_addr);
+    for (int i=Q_start_addr;i<Q_start_addr+b;i++) begin
+        for (int j=i;j<=Q_end_addr;j=j+b) begin
+            $write("%h ", DMEM[j]);
+        end
+        $write("\n");
+    end
+endfunction
+
+function void print_matrix_R(input logic [REG_WIDTH-1:0]DMEM[0:DATA_MEM_DEPTH-1], logic [REG_WIDTH-1:0]a,c,R_start_addr,R_end_addr);
+    for (int i=R_start_addr;i<R_end_addr;i=i+c) begin
+        for (int j=i;j<i+c;j++) begin
+            $write("%h ", DMEM[j]);
+        end
+        $write("\n");
+    end
+endfunction
 
 
 endmodule : processor_tb
