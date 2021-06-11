@@ -20,7 +20,7 @@ localparam BAUD_RATE = 115200;
 localparam UART_WIDTH = 8;
 
 ////// logic related to data memory //////////
-logic [DATA_MEM_WIDTH-1:0]DataMemOut, DataMemIn,processor_DataIn, processor_DataOut, uart_DataOut;
+logic [DATA_MEM_WIDTH-1:0]DataMemOut, DataMemIn, processor_DataOut, uart_DataOut;
 logic [DATA_MEM_ADDR_WIDTH-1:0] processor_dataMemAddr[0:CORE_COUNT-1];
 logic [DATA_MEM_ADDR_WIDTH-1:0] dataMemAddr, uart_dataMemAddr;
 
