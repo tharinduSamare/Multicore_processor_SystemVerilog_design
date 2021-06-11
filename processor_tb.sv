@@ -9,15 +9,15 @@ logic [WIDTH-1:0] RAM [0:DEPTH-1];
 // logic [ADDR_WIDTH-1:0] addr;
 
 
-function initialize_full_memory(input logic [WIDTH-1:0]initial_vals[0:DEPTH-1]);
+function void initialize_full_memory(input logic [WIDTH-1:0]initial_vals[0:DEPTH-1]);
     RAM = initial_vals;
 endfunction
 
-function initialize_singal_memory_location(input data_t value, input addr_t addr);
+function void initialize_singal_memory_location(input data_t value, input addr_t addr);
     RAM[addr] = value;
 endfunction
 
-task Read_memory(input addr_t addr, output data_t value);        // if needed read time delay can be added
+task Read_memory(input addr_t addr, output data_t value, ref logic clk);        // if needed read time delay can be added
     value = RAM[addr];
 endtask
 
@@ -28,7 +28,7 @@ task Write_memory(input addr_t addr, input data_t data, input logic wrEn, ref lo
     end
 endtask
 
-function display_RAM();
+function void display_RAM();
     foreach(this.RAM[i])
         $display(i,this.RAM[i]);
 
@@ -97,11 +97,11 @@ initial begin
 end
 
 always_ff @(posedge clk) begin
-    ins_mem.Read_memory(.addr(insMemAddr), .value(InsMemOut));
+    ins_mem.Read_memory(.addr(insMemAddr), .value(InsMemOut), .clk(clk));
 end
 
 always_ff @(posedge clk) begin
-    data_mem.Read_memory(.addr(dataMemAddr), .value(DataMemOut));
+    data_mem.Read_memory(.addr(dataMemAddr), .value(DataMemOut), .clk(clk));
 end
 
 always_ff @(posedge clk) begin
@@ -110,6 +110,7 @@ end
 
 
 ////////////// verification of the simulation correctness /////////
+
 localparam  Q_end_addr_location = DATA_MEM_ADDR_WIDTH'(12'd7),
             R_start_addr_location = DATA_MEM_ADDR_WIDTH'(12'd5),
             R_end_addr_location = DATA_MEM_ADDR_WIDTH'(12'd8);
@@ -128,6 +129,8 @@ always_ff @(posedge clk) begin
         Q_end_addr = data_mem.get_value(DATA_MEM_ADDR_WIDTH'(12'd7));
         R_end_addr = data_mem.get_value(DATA_MEM_ADDR_WIDTH'(12'd8));
 
+        
+
         $display("\nMatrix P\n");
         print_matrix_P(data_mem.RAM, a,b,P_start_addr, P_end_addr);
 
@@ -136,6 +139,7 @@ always_ff @(posedge clk) begin
 
         $display("\nMatrix R\n");
         print_matrix_R(data_mem.RAM,a,c,R_start_addr,R_end_addr);
+
         $stop;
     end
 end
@@ -165,7 +169,8 @@ function void print_matrix_R(input logic [REG_WIDTH-1:0]DMEM[0:DATA_MEM_DEPTH-1]
         end
         $write("\n");
     end
-endfunction
+endfunction 
 
+end
 
 endmodule : processor_tb
