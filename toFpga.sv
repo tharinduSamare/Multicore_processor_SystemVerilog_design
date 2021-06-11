@@ -7,7 +7,7 @@ module toFpga (
 	output logic UART_TXD
 );
 
-localparam CORE_COUNT = 4;
+localparam CORE_COUNT = 2;
 localparam REG_WIDTH = 12;
 localparam DATA_MEM_WIDTH = CORE_COUNT * REG_WIDTH;
 localparam INS_WIDTH = 8;
@@ -21,21 +21,19 @@ localparam UART_WIDTH = 8;
 
 ////// logic related to data memory //////////
 logic [DATA_MEM_WIDTH-1:0]DataMemOut, DataMemIn, processor_DataOut, uart_DataOut;
-logic [DATA_MEM_ADDR_WIDTH-1:0] processor_dataMemAddr[0:CORE_COUNT-1];
+logic [DATA_MEM_ADDR_WIDTH-1:0] processor_dataMemAddr;
 logic [DATA_MEM_ADDR_WIDTH-1:0] dataMemAddr, uart_dataMemAddr;
 
 ////// logic related to instruction memory ///////////
 logic [INS_WIDTH-1:0]InsMemOut, InsMemIn;
-logic [INS_MEM_ADDR_WIDTH-1:0] processor_InsMemAddr[0:CORE_COUNT-1];
+logic [INS_MEM_ADDR_WIDTH-1:0] processor_InsMemAddr; 
 logic [INS_MEM_ADDR_WIDTH-1:0]insMemAddr,uart_InsMemAddr;
 
 ////// other logics ////////////
-logic processor_DataMemWrEn[0:CORE_COUNT-1]; 
-logic dataMemWrEn, uart_dataMemWrEn;
+logic dataMemWrEn, processor_DataMemWrEn, uart_dataMemWrEn;
 logic uart_InsMemWrEn;
-logic clk, rstN, startN, processStart, processDone;
-logic core_done[0:CORE_COUNT-1];
-logic core_ready[0:CORE_COUNT-1];
+logic clk, rstN, startN, processStart;
+logic processDone, processor_ready; 
 
 /// logic related to communication unit //////////////
 logic rxByteReady, txByteReady;
@@ -47,9 +45,9 @@ logic [7:0]byteForTx, byteFromRx;
 logic uart_DataMem_transmitted, uart_DataMem_received, uart_InsMem_received;
 logic uart_dmem_start_transmitN;
 //////////////////////////////////////
-assign LEDG[1] = core_done[0];
-assign LEDG[0] = core_ready[0];
-assign processDone = core_done[0];
+assign LEDG[1] = processDone;
+assign LEDG[0] = processor_ready;
+
 
 
 ///////////////// state change logic
@@ -125,11 +123,11 @@ assign processStart = ((currentState == uart_receive_dmem) && (uart_DataMem_rece
 assign uart_dmem_start_transmitN = ((currentState == process_exicute) && (processDone))? 1'b0: 1'b1;
 
 assign dataMemWrEn = ((currentState == uart_receive_dmem) || (currentState == uart_transmit_dmem) )? uart_dataMemWrEn:
-                    (currentState == process_exicute)? processor_DataMemWrEn[0]:
+                    (currentState == process_exicute)? processor_DataMemWrEn:
                     1'b0;
 
 assign dataMemAddr = ((currentState == uart_receive_dmem) || (currentState == uart_transmit_dmem) )? uart_dataMemAddr:
-                    (currentState == process_exicute)? processor_dataMemAddr[0]:
+                    (currentState == process_exicute)? processor_dataMemAddr:
                     {DATA_MEM_ADDR_WIDTH{1'b0}};
 
 assign DataMemIn = ((currentState == uart_receive_dmem) || (currentState == uart_transmit_dmem) )? uart_DataOut:
@@ -137,7 +135,7 @@ assign DataMemIn = ((currentState == uart_receive_dmem) || (currentState == uart
                     {DATA_MEM_WIDTH{1'b0}};
 
 assign insMemAddr = (currentState == uart_receive_Imem)? uart_InsMemAddr:
-                    (currentState == process_exicute)? processor_InsMemAddr[0]:
+                    (currentState == process_exicute)? processor_InsMemAddr:
                     {INS_MEM_ADDR_WIDTH{1'b0}};
 
 assign new_ins_byte_indicate = (currentState == uart_receive_Imem)? rx_new_byte_indicate: 1'b0;
@@ -145,14 +143,11 @@ assign new_data_byte_indicate = (currentState == uart_receive_dmem)? rx_new_byte
 
 
 ////////////////////////////////////////////////////////////////////////
-genvar i;
-generate
-    for (i=0;i<CORE_COUNT; i=i+1) begin:core
-        processor #(.REG_WIDTH(REG_WIDTH), .INS_WIDTH(INS_WIDTH)) CPU(.clk(CLOCK_50), .rstN(rstN), .start(processStart), .processorDataIn(DataMemOut[REG_WIDTH*i+:REG_WIDTH]), 
-            .InsMemOut(InsMemOut), .dataMemAddr(processor_dataMemAddr[i]), .processorDataOut(processor_DataOut[REG_WIDTH*i+:REG_WIDTH]), 
-            .insMemAddr(processor_InsMemAddr[i]), .DataMemWrEn(processor_DataMemWrEn[i]), .done(core_done[i]), .ready(core_ready[i]) ); 
-    end
-endgenerate
+multi_core_processor #(.REG_WIDTH(REG_WIDTH), .INS_WIDTH(INS_WIDTH), .CORE_COUNT(CORE_COUNT), .DATA_MEM_ADDR_WIDTH(DATA_MEM_ADDR_WIDTH), .INS_MEM_ADDR_WIDTH(INS_MEM_ADDR_WIDTH))
+                    multi_core_processor(.clk,.rstN,.start(processStart), .ProcessorDataIn(DataMemOut), .InsMemOut, 
+                    .ProcessorDataOut(processor_DataOut), .insMemAddr(processor_InsMemAddr), .dataMemAddr(processor_dataMemAddr),
+                    .DataMemWrEn(processor_DataMemWrEn), .done(processDone), .ready(processor_ready));
+
 
 //  RAM #(.WIDTH(INS_WIDTH), .DEPTH(INS_MEM_DEPTH)) IM(.clk(CLOCK_50), .wrEn(uart_InsMemWrEn), .dataIn(InsMemIn), .addr(insMemAddr), .dataOut(InsMemOut));
 
@@ -221,7 +216,7 @@ end
 
 //////////////to count the time taken to the process
 logic [25:0]currentTime;
-timeCounter TC(.clk(CLOCK_50), .rstN(rstN), .start(processStart), .stop(core_done[0]), 
+timeCounter TC(.clk(CLOCK_50), .rstN(rstN), .start(processStart), .stop(processDone), 
                 .timeDuration(currentTime));
 
 logic [6:0]hex_display_value[7:0];

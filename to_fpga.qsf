@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE115F29C7
-set_global_assignment -name TOP_LEVEL_ENTITY processor
+set_global_assignment -name TOP_LEVEL_ENTITY toFpga
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "07:31:43  JANUARY 26, 2021"
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
@@ -612,29 +612,6 @@ set_global_assignment -name EDA_TEST_BENCH_NAME data_encoder_decoder_tb -section
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id data_encoder_decoder_tb
 set_global_assignment -name EDA_TEST_BENCH_RUN_SIM_FOR "2 ms" -section_id data_encoder_decoder_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME data_encoder_decoder_tb -section_id data_encoder_decoder_tb
-set_global_assignment -name SYSTEMVERILOG_FILE toFpga.sv
-set_global_assignment -name SYSTEMVERILOG_FILE convertToHEX.sv
-set_global_assignment -name SYSTEMVERILOG_FILE hex_display.sv
-set_global_assignment -name SYSTEMVERILOG_FILE uart_transmitter.sv
-set_global_assignment -name SYSTEMVERILOG_FILE uart_system.sv
-set_global_assignment -name SYSTEMVERILOG_FILE uart_receiver.sv
-set_global_assignment -name SYSTEMVERILOG_FILE mem_communication_interface.sv
-set_global_assignment -name SYSTEMVERILOG_FILE data_encoder_decoder.sv
-set_global_assignment -name SYSTEMVERILOG_FILE uart_baudRateGen.sv
-set_global_assignment -name SYSTEMVERILOG_FILE timeCounter.sv
-set_global_assignment -name SYSTEMVERILOG_FILE details.sv
-set_global_assignment -name SYSTEMVERILOG_FILE binaryToBCD.sv
-set_global_assignment -name SYSTEMVERILOG_FILE SSeg.sv
-set_global_assignment -name SYSTEMVERILOG_FILE processor.sv
-set_global_assignment -name SYSTEMVERILOG_FILE RAM.sv
-set_global_assignment -name SYSTEMVERILOG_FILE controlUnit.sv
-set_global_assignment -name SYSTEMVERILOG_FILE zReg.sv
-set_global_assignment -name SYSTEMVERILOG_FILE multiplexer.sv
-set_global_assignment -name SYSTEMVERILOG_FILE register.sv
-set_global_assignment -name SYSTEMVERILOG_FILE incRegister.sv
-set_global_assignment -name SYSTEMVERILOG_FILE alu.sv
-set_global_assignment -name QIP_FILE IP_insMem.qip
-set_global_assignment -name QIP_FILE IP_dataMem.qip
 set_global_assignment -name ENABLE_OCT_DONE OFF
 set_global_assignment -name ENABLE_CONFIGURATION_PINS OFF
 set_global_assignment -name ENABLE_BOOT_SEL_PIN OFF
@@ -677,6 +654,30 @@ set_global_assignment -name EDA_TEST_BENCH_FILE register.sv -section_id processo
 set_global_assignment -name EDA_TEST_BENCH_FILE 4_data_mem_tb.txt -section_id processor_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE 9_ins_mem_tb.txt -section_id processor_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE 7_multiply_answer.txt -section_id processor_tb
+set_global_assignment -name SYSTEMVERILOG_FILE multi_core_processor.sv
+set_global_assignment -name SYSTEMVERILOG_FILE toFpga.sv
+set_global_assignment -name SYSTEMVERILOG_FILE convertToHEX.sv
+set_global_assignment -name SYSTEMVERILOG_FILE hex_display.sv
+set_global_assignment -name SYSTEMVERILOG_FILE uart_transmitter.sv
+set_global_assignment -name SYSTEMVERILOG_FILE uart_system.sv
+set_global_assignment -name SYSTEMVERILOG_FILE uart_receiver.sv
+set_global_assignment -name SYSTEMVERILOG_FILE mem_communication_interface.sv
+set_global_assignment -name SYSTEMVERILOG_FILE data_encoder_decoder.sv
+set_global_assignment -name SYSTEMVERILOG_FILE uart_baudRateGen.sv
+set_global_assignment -name SYSTEMVERILOG_FILE timeCounter.sv
+set_global_assignment -name SYSTEMVERILOG_FILE details.sv
+set_global_assignment -name SYSTEMVERILOG_FILE binaryToBCD.sv
+set_global_assignment -name SYSTEMVERILOG_FILE SSeg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE processor.sv
+set_global_assignment -name SYSTEMVERILOG_FILE RAM.sv
+set_global_assignment -name SYSTEMVERILOG_FILE controlUnit.sv
+set_global_assignment -name SYSTEMVERILOG_FILE zReg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE multiplexer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE register.sv
+set_global_assignment -name SYSTEMVERILOG_FILE incRegister.sv
+set_global_assignment -name SYSTEMVERILOG_FILE alu.sv
+set_global_assignment -name QIP_FILE IP_insMem.qip
+set_global_assignment -name QIP_FILE IP_dataMem.qip
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
