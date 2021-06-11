@@ -148,8 +148,8 @@ assign new_data_byte_indicate = (currentState == uart_receive_dmem)? rx_new_byte
 genvar i;
 generate
     for (i=0;i<CORE_COUNT; i=i+1) begin:core
-        processor #(.REG_WIDTH(REG_WIDTH), .INS_WIDTH(INS_WIDTH)) CPU(.clk(CLOCK_50), .rstN(rstN), .start(processStart), .DataMemOut(DataMemOut[REG_WIDTH*i+:REG_WIDTH]), 
-            .InsMemOut(InsMemOut), .dataMemAddr(processor_dataMemAddr[i]), .DataMemIn(processor_DataOut[REG_WIDTH*i+:REG_WIDTH]), 
+        processor #(.REG_WIDTH(REG_WIDTH), .INS_WIDTH(INS_WIDTH)) CPU(.clk(CLOCK_50), .rstN(rstN), .start(processStart), .processorDataIn(DataMemOut[REG_WIDTH*i+:REG_WIDTH]), 
+            .InsMemOut(InsMemOut), .dataMemAddr(processor_dataMemAddr[i]), .processorDataOut(processor_DataOut[REG_WIDTH*i+:REG_WIDTH]), 
             .insMemAddr(processor_InsMemAddr[i]), .DataMemWrEn(processor_DataMemWrEn[i]), .done(core_done[i]), .ready(core_ready[i]) ); 
     end
 endgenerate

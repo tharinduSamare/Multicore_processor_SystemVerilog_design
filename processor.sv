@@ -5,9 +5,9 @@ module processor import details::*;
 )
 (
     input  logic clk,rstN,start,
-    input  logic [REG_WIDTH-1:0]DataMemOut,
+    input  logic [REG_WIDTH-1:0]ProcessorDataIn,
     input  logic [INS_WIDTH-1:0]InsMemOut,
-    output logic  [REG_WIDTH-1:0]dataMemAddr,DataMemIn,
+    output logic  [REG_WIDTH-1:0]dataMemAddr,ProcessorDataOut,
     output logic  [INS_WIDTH-1:0]insMemAddr,
     output logic  DataMemWrEn,
     output logic  done,ready
@@ -33,7 +33,7 @@ controlUnit CU(.clk, .rstN, .start, .Zout, .instruction(ISA_t'(IRout)), .aluOp(s
 
 alu #(.WIDTH(REG_WIDTH)) alu(.a(alu_a), .b(alu_b), .selectOp(select_alu_op), .c(alu_out));
 
-multiplexer #(.WIDTH(REG_WIDTH), .IR_WIDTH(INS_WIDTH)) mux(.selectIn(busSel), .DMem(DataMemOut), .R(Rout), .RL(RLout), .RC(RCout), .RP(RPout), .RQ(RQout), .R1(R1out), 
+multiplexer #(.WIDTH(REG_WIDTH), .IR_WIDTH(INS_WIDTH)) mux(.selectIn(busSel), .DMem(ProcessorDataIn), .R(Rout), .RL(RLout), .RC(RCout), .RP(RPout), .RQ(RQout), .R1(R1out), 
                 .AC(ACout), .IR(IRout), .busOut(busOut));
 
 register #(.WIDTH(REG_WIDTH)) AR(.dataIn(busOut), .wrEn(AR_wrEn), .rstN(rstN), .clk(clk), .dataOut(dataMemAddr));
@@ -58,7 +58,7 @@ register #(.WIDTH(REG_WIDTH)) AC(.dataIn(alu_out), .wrEn(AC_wrEn), .rstN(rstN), 
 
 zReg #(.WIDTH(REG_WIDTH)) Z(.dataIn(alu_out), .clk(clk), .rstN(rstN), .wrEn(ZWrEn), .Zout(Zout));
 
-assign DataMemIn = Rout;
+assign ProcessorDataOut = Rout;
 
 assign alu_a = ACout;
 assign alu_b = busOut;
