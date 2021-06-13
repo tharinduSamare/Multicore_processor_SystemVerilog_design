@@ -45,7 +45,7 @@ module processor_tb import details::*;();
 
 timeunit 1ns;
 timeprecision 1ps;
-localparam CLK_PERIOD = 10;
+localparam CLK_PERIOD = 20;
 logic clk;
 initial begin
     clk <= 0;
@@ -63,9 +63,9 @@ localparam DATA_MEM_ADDR_WIDTH = $clog2(DATA_MEM_DEPTH);
 localparam INS_MEM_ADDR_WIDTH = $clog2(INS_MEM_DEPTH);
 
 logic rstN,start;
-logic [REG_WIDTH-1:0]DataMemOut;
+logic [REG_WIDTH-1:0]ProcessorDataIn;
 logic [INS_WIDTH-1:0]InsMemOut;
-logic  [REG_WIDTH-1:0]dataMemAddr,DataMemIn;
+logic  [REG_WIDTH-1:0]dataMemAddr,ProcessorDataOut;
 logic  [INS_WIDTH-1:0]insMemAddr;
 logic  DataMemWrEn;
 logic  done,ready;
@@ -101,11 +101,11 @@ always_ff @(posedge clk) begin
 end
 
 always_ff @(posedge clk) begin
-    data_mem.Read_memory(.addr(dataMemAddr), .value(DataMemOut), .clk(clk));
+    data_mem.Read_memory(.addr(dataMemAddr), .value(ProcessorDataIn), .clk(clk));
 end
 
 always_ff @(posedge clk) begin
-    data_mem.Write_memory(.addr(dataMemAddr), .data(DataMemIn), .wrEn(DataMemWrEn), .clk(clk));
+    data_mem.Write_memory(.addr(dataMemAddr), .data(ProcessorDataOut), .wrEn(DataMemWrEn), .clk(clk));
 end
 
 

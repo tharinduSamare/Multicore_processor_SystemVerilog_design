@@ -2,7 +2,7 @@ import math
 
 data = open('2_matrix_in.txt','r')
 txt_code = data.read().strip().split('\n')
-machine_code = open('4_data_mem_tb','w')
+machine_code = open('4_data_mem_tb.txt','w')
 
 out = []
 
