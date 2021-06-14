@@ -32,15 +32,16 @@ localparam logic [MEM_ADDR_LENGTH-1:0] LAST_MEM_ADDR = '1; //all bits = 1
 logic startTranmit,txReady,rxDone;
 logic new_rx_data_indicate;
 
-typedef enum logic [2:0] {
-    idle = 3'b0,
-    transmit_0 = 3'd1,
-    transmit_1 = 3'd2,
-    transmit_2 = 3'd3,
-    transmit_3 = 3'd4,
-    receive_0 = 3'd5,
-    receive_1 = 3'd6,
-    receive_2 = 3'd7
+typedef enum logic [3:0] {
+    idle       = 4'b0,
+    transmit_0 = 4'd1,
+    transmit_1 = 4'd2,
+    transmit_2 = 4'd3,
+    transmit_3 = 4'd4,
+    receive_0  = 4'd5,
+    receive_1  = 4'd6,
+    receive_2  = 4'd7,
+    receive_1_1= 4'd8
 } state_t;
 
 state_t currentState, nextState;
@@ -115,6 +116,10 @@ always_comb begin
         end
 
         receive_1: begin           // store in the memory (no need extra delay as it is explicitly given in receive_0)
+            nextState = receive_1_1;
+        end
+        
+        receive_1_1: begin
             nextState = receive_2;
         end
 
@@ -132,7 +137,7 @@ always_comb begin
 end
 
 assign startTranmit = currentStartTransmit;
-assign memWrEn = (currentState == receive_1)? 1'b1: 1'b0;
+assign memWrEn = ((currentState == receive_1) || (currentState == receive_1_1))? 1'b1: 1'b0;
 
 assign mem_address = currentAddress;
 
