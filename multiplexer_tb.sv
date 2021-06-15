@@ -1,4 +1,5 @@
-module multiplexer_tb();
+module multiplexer_tb import details::*;
+();
 
 timeunit 1ns;
 timeprecision 1ps;
@@ -27,7 +28,7 @@ localparam  DMem_sel = 4'b0,
 localparam WIDTH = 12;
 localparam IR_WIDTH = 8;
 
-logic [3:0]selectIn;
+bus_in_sel_t selectIn;
 logic [WIDTH-1:0]DMem, R, RL, RC, RP, RQ, R1, AC;
 logic [IR_WIDTH-1:0]IR;
 logic [WIDTH-1:0]busOut;
@@ -48,15 +49,17 @@ assign IR = 18;
 initial begin
     for (int i = 0; i < 10 ;i++ ) begin
         @(posedge clk);
-        selectIn <= i;
+        selectIn <= bus_in_sel_t'(i);
         $display("busOut = %d", busOut);
     end
 
     repeat(10) begin
         @(posedge clk);
-        std::randomize(selectIn);
+        void'(std::randomize(selectIn));
         $display("busOut = %d", busOut); 
     end
+
+    $stop;
 end 
 
 endmodule:multiplexer_tb

@@ -4,9 +4,9 @@ module multiplexer import details::*;
     parameter IR_WIDTH = 8
 )
 (
-    input bus_in_sel_t selectIn,
-    input logic [WIDTH-1:0]DMem, R, RL, RC, RP, RQ, R1, AC,
-    input logic [IR_WIDTH-1:0]IR,
+    input  bus_in_sel_t selectIn,
+    input  logic [WIDTH-1:0]DMem, R, RL, RC, RP, RQ, R1, AC,
+    input  logic [IR_WIDTH-1:0]IR,
     output logic [WIDTH-1:0]busOut
 );
 
