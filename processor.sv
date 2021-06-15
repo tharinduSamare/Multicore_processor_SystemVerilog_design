@@ -1,16 +1,19 @@
 module processor import details::*;
 #(
     parameter REG_WIDTH = 12,
-    parameter INS_WIDTH = 8
+    parameter INS_WIDTH = 8,
+    parameter DATA_MEM_ADDR_WIDTH = 12,
+    parameter INS_MEM_ADDR_WIDTH = 8
 )
 (
     input  logic clk,rstN,start,
     input  logic [REG_WIDTH-1:0]ProcessorDataIn,
     input  logic [INS_WIDTH-1:0]InsMemOut,
-    output logic  [REG_WIDTH-1:0]dataMemAddr,ProcessorDataOut,
-    output logic  [INS_WIDTH-1:0]insMemAddr,
-    output logic  DataMemWrEn,
-    output logic  done,ready
+    output logic [REG_WIDTH-1:0]ProcessorDataOut,
+    output logic [DATA_MEM_ADDR_WIDTH-1:0]dataMemAddr,
+    output logic [INS_MEM_ADDR_WIDTH-1:0]insMemAddr,
+    output logic DataMemWrEn,
+    output logic done,ready
 );
 
 logic [REG_WIDTH-1:0]alu_a, alu_b, alu_out;

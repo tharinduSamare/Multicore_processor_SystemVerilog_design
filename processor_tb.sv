@@ -70,7 +70,8 @@ logic  [INS_WIDTH-1:0]insMemAddr;
 logic  DataMemWrEn;
 logic  done,ready;
 
-processor #(.REG_WIDTH(REG_WIDTH), .INS_WIDTH(INS_WIDTH))dut(.*);
+processor #(.REG_WIDTH(REG_WIDTH), .INS_WIDTH(INS_WIDTH), .INS_MEM_ADDR_WIDTH(INS_MEM_ADDR_WIDTH), 
+            .DATA_MEM_ADDR_WIDTH(DATA_MEM_ADDR_WIDTH))dut(.*);
 
 ///// initialize instruction and data memory /////////
 RAM_class #(.WIDTH(INS_WIDTH), .DEPTH(INS_MEM_DEPTH)) ins_mem = new;

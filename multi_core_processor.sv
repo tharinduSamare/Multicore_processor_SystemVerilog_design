@@ -24,7 +24,8 @@ logic [INS_MEM_ADDR_WIDTH-1:0] core_InsMemAddr[0:CORE_COUNT-1];
 genvar i;
 generate
     for (i=0;i<CORE_COUNT; i=i+1) begin:core
-        processor #(.REG_WIDTH(REG_WIDTH), .INS_WIDTH(INS_WIDTH)) CPU(.clk, .rstN, .start, .ProcessorDataIn(ProcessorDataIn[REG_WIDTH*i+:REG_WIDTH]), 
+        processor #(.REG_WIDTH(REG_WIDTH), .INS_WIDTH(INS_WIDTH), .INS_MEM_ADDR_WIDTH(INS_MEM_ADDR_WIDTH), .DATA_MEM_ADDR_WIDTH(DATA_MEM_ADDR_WIDTH)) 
+            CPU(.clk, .rstN, .start, .ProcessorDataIn(ProcessorDataIn[REG_WIDTH*i+:REG_WIDTH]), 
             .InsMemOut, .dataMemAddr(core_dataMemAddr[i]), .ProcessorDataOut(ProcessorDataOut[REG_WIDTH*i+:REG_WIDTH]), 
             .insMemAddr(core_InsMemAddr[i]), .DataMemWrEn(core_DataMemWrEn[i]), .done(core_done[i]), .ready(core_ready[i]) ); 
     end
