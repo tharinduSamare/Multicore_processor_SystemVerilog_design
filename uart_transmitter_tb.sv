@@ -18,7 +18,7 @@ localparam BAUD_RATE = 19200;
 logic rstN,baudTick;
 logic [DATA_WIDTH-1:0]dataIn;
 logic txStart;
-logic tx,TxReady;
+logic tx,tx_ready;
 
 uart_baudRateGen #(.BAUD_RATE(BAUD_RATE)) baudRateGen(.*);
 uart_transmitter #(.DATA_WIDTH(DATA_WIDTH)) transmitter(.*);
@@ -29,17 +29,19 @@ initial begin
     @(posedge clk);
     rstN <= 1'b1;
 
-    forever begin
+    repeat(10) begin
         @(posedge clk);
-        if (TxReady) begin
-            std::randomize(dataIn);
-            txStart = 1'b1;
+        wait(tx_ready);
+        @(posedge clk);
+        dataIn = $urandom();
+        txStart = 1'b1;
 
-            @(posedge clk);
-            txStart = 1'b0;
-        end
+        @(posedge clk);
+        txStart = 1'b0;
     end
+    @(posedge clk);
+    wait(tx_ready);
+    $stop;
 end
-
 
 endmodule:uart_transmitter_tb

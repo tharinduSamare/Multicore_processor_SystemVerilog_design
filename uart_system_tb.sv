@@ -37,34 +37,39 @@ end
 initial begin
     #(CLK_PERIOD*2); // to initialize
 
-    forever begin
+    repeat(10) begin
         @(posedge clk);
-        if (tx_ready) begin
-            std::randomize(byteForTx);
-            txByteStart = 1'b1;
+        wait(tx_ready);
+        @(posedge clk);
+        byteForTx = $urandom();
+        txByteStart = 1'b1;
 
-            @(posedge clk);
-            txByteStart = 1'b0;
-        end
+        @(posedge clk);
+        txByteStart = 1'b0;
     end
+    @(posedge clk);
+    wait(tx_ready);
+    $stop;
 end
 
 /////////  Receier test
 initial begin
     #(CLK_PERIOD*2); // to initialize
 
-    forever begin
+    repeat(10) begin
         @(posedge clk);  //starting delimiter
         rx <= 1'b0;
         #(BAUD_TIME_PERIOD);
         for (int i=0;i<DATA_WIDTH;i++) begin:data  //data
             @(posedge clk);
-            std::randomize(rx);
+            rx = $urandom();
             #(BAUD_TIME_PERIOD);
         end
         @(posedge clk);  // end delimiter
         rx <= 1'b1;
         #(BAUD_TIME_PERIOD);
     end
+
+    $stop;
 end
 endmodule:uart_system_tb

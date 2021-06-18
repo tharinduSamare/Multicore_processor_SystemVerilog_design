@@ -3,7 +3,7 @@ module uart_baudRateGen_tb();
 timeunit 1ns;
 timeprecision 1ps;
 
-localparam CLK_PERIOD = 10;
+localparam CLK_PERIOD = 20;
 logic clk;
 initial begin
     clk = 0;
@@ -36,7 +36,8 @@ end
 
 int clk_count = 0;
 initial begin
-    forever begin
+    @(posedge clk);
+    repeat(MAX_COUNT *5) begin
         @(posedge clk);
         if (baudTick == 1'b1) begin
             $display("clk_count = %d", clk_count);
@@ -46,6 +47,7 @@ initial begin
             clk_count = clk_count + 1;
         end
     end
+    $stop;
 end
 
 endmodule:uart_baudRateGen_tb

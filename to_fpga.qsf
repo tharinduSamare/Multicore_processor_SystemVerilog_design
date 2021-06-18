@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone IV E"
 set_global_assignment -name DEVICE EP4CE115F29C7
-set_global_assignment -name TOP_LEVEL_ENTITY zReg
+set_global_assignment -name TOP_LEVEL_ENTITY uart_transmitter
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "07:31:43  JANUARY 26, 2021"
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
@@ -53,7 +53,7 @@ set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "SYSTEMVERILOG HDL" -section_
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH zReg_tb -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH uart_transmitter_tb -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_NAME alu_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id alu_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME alu_tb -section_id alu_tb
@@ -604,7 +604,6 @@ set_location_assignment PIN_V24 -to HSMC_CLKOUT_N2
 set_location_assignment PIN_G24 -to HSMC_CLKOUT_N1
 set_global_assignment -name EDA_TEST_BENCH_NAME uart_baudRateGen_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id uart_baudRateGen_tb
-set_global_assignment -name EDA_TEST_BENCH_RUN_SIM_FOR "200 ns" -section_id uart_baudRateGen_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME uart_baudRateGen_tb -section_id uart_baudRateGen_tb
 set_global_assignment -name EDA_TEST_BENCH_NAME data_encoder_decoder_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id data_encoder_decoder_tb
@@ -657,6 +656,12 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME multi_core_processor_tb -
 set_global_assignment -name EDA_TEST_BENCH_NAME mem_communication_interface_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id mem_communication_interface_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME mem_communication_interface_tb -section_id mem_communication_interface_tb
+set_global_assignment -name EDA_TEST_BENCH_NAME uart_receiver_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id uart_receiver_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME uart_receiver_tb -section_id uart_receiver_tb
+set_global_assignment -name EDA_TEST_BENCH_NAME uart_system_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id uart_system_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME uart_system_tb -section_id uart_system_tb
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
@@ -1186,6 +1191,9 @@ set_instance_assignment -name IO_STANDARD LVDS -to HSMC_RX_D_N[16]
 set_instance_assignment -name IO_STANDARD LVDS -to HSMC_CLKOUT_N2
 set_instance_assignment -name IO_STANDARD LVDS -to HSMC_CLKOUT_N1
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name EDA_TEST_BENCH_NAME uart_transmitter_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id uart_transmitter_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME uart_transmitter_tb -section_id uart_transmitter_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE alu_tb.sv -section_id alu_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE incRegister_tb.sv -section_id incRegister_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE register_tb.sv -section_id register_tb
@@ -1223,3 +1231,11 @@ set_global_assignment -name EDA_TEST_BENCH_FILE uart_system.sv -section_id mem_c
 set_global_assignment -name EDA_TEST_BENCH_FILE uart_transmitter.sv -section_id mem_communication_interface_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE uart_receiver.sv -section_id mem_communication_interface_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE uart_baudRateGen.sv -section_id mem_communication_interface_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE uart_receiver_tb.sv -section_id uart_receiver_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE uart_baudRateGen.sv -section_id uart_receiver_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE uart_system_tb.sv -section_id uart_system_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE uart_transmitter.sv -section_id uart_system_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE uart_receiver.sv -section_id uart_system_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE uart_baudRateGen.sv -section_id uart_system_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE uart_transmitter_tb.sv -section_id uart_transmitter_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE uart_baudRateGen.sv -section_id uart_transmitter_tb

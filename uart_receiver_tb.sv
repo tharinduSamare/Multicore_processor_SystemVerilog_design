@@ -32,19 +32,20 @@ initial begin
     @(posedge clk);
     rstN <= 1'b1;
 
-    forever begin
+    repeat(10) begin
         @(posedge clk);  //starting delimiter
         rx <= 1'b0;
         #(BAUD_TIME_PERIOD);
         for (int i=0;i<DATA_WIDTH;i++) begin:data  //data
             @(posedge clk);
-            std::randomize(rx);
+            rx = $urandom();
             #(BAUD_TIME_PERIOD);
         end
         @(posedge clk);  // end delimiter
         rx <= 1'b1;
         #(BAUD_TIME_PERIOD);
     end
+    $stop;
 end
 
 endmodule:uart_receiver_tb
