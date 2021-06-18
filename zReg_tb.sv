@@ -15,16 +15,16 @@ end
 
 localparam WIDTH = 12;
 logic [WIDTH-1:0]dataIn;
-logic rst, wrEn, Zout;
+logic rstN, wrEn, Zout;
 
 zReg #(.WIDTH(WIDTH)) dut(.*);
 
 initial begin
     @(posedge clk);
-    rst <= 0;
+    rstN <= 0;
 
     @(posedge clk);
-    rst <= 1;
+    rstN <= 1;
     dataIn <= 0;
     wrEn <= 0;
 
@@ -38,10 +38,12 @@ initial begin
 
     repeat(10) begin
         @(posedge clk);
-        std::randomize(dataIn);
-        std::randomize(wrEn);
-        std::randomize(rst);
+        dataIn = $urandom();
+        wrEn = $urandom();
+        rstN = $urandom();
     end
+    
+    $stop;
 end
 
 endmodule: zReg_tb

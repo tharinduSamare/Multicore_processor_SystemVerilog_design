@@ -2,7 +2,7 @@ class Rand_Num #(WIDTH);
     rand bit [WIDTH-1:0]num;
 
     function new();
-        this.randomize();      
+        void'(this.randomize());      
     endfunction
     
 endclass
@@ -12,7 +12,7 @@ module RAM_tb();
 
 timeunit 1ns;
 timeprecision 1ps;
-localparam CLK_PERIOD = 10;
+localparam CLK_PERIOD = 20;
 logic clk;
 initial begin
     clk <= 0;
@@ -32,7 +32,7 @@ data_t dataIn, dataOut;
 typedef logic [ADDR_WIDTH-1:0]addr_t;
 addr_t addr;
 
-RAM #(.WIDTH(WIDTH), .DEPTH(DEPTH)) dut(.*);
+RAM #(.WIDTH(WIDTH), .DEPTH(DEPTH), .ADDR_WIDTH(ADDR_WIDTH)) dut(.*);
 
 Rand_Num #(.WIDTH(WIDTH)) dataIn_r;
 Rand_Num #(.WIDTH(ADDR_WIDTH)) addr_r;
@@ -62,6 +62,8 @@ initial begin
         addr <= addr_r.num;
         wrEn <= wrEn_r.num;
     end    
+
+    $stop;
 end
 
 typedef logic [WIDTH-1:0]test_memory_t[0:DEPTH-1];

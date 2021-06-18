@@ -53,34 +53,44 @@ initial begin
     rstN <= 1'b1;
 
     //////////transmission check
+    repeat(5) begin
+        @(posedge clk);
+        wait(txReady);
+        @(posedge clk);
+        void'(std::randomize(dataFromMem));
+        txStart <= 1'b1;
 
-    // for (int i=0;i<5;i++) begin:tx_check
-    //     @(posedge clk);
-    //     wait(txReady);
-    //     @(posedge clk);
-    //     void'(std::randomize(dataFromMem));
-    //     txStart <= 1'b1;
+        @(posedge clk);
+        txStart <= 1'b0;
+    end
 
-    //     @(posedge clk);
-    //     txStart <= 1'b0;
-    // end
+    ///////////// reset before receiver check begin
+    @(posedge clk);
+    wait(txReady);  // wait until transmission is over
+    @(posedge clk);
+    rstN <= 1'b0;
+    @(posedge clk);
+    rstN <= 1'b1;
 
     /////////////////receiver check
-
-    for (int j=0; j< WORD_2_UART_COUNT * 5;j++) begin:rx_check
-        @(posedge clk);  //starting delimiter
-        rx <= 1'b0;
-        #(BAUD_TIME_PERIOD);
-        for (int i=0;i<UART_WIDTH;i++) begin:data  //data
-            @(posedge clk);
-            void'(std::randomize(rx));
+    @(posedge clk);
+    repeat(5) begin
+        for (int j=0; j< WORD_2_UART_COUNT;j++) begin:rx_check
+            @(posedge clk);  //starting delimiter
+            rx <= 1'b0;
             #(BAUD_TIME_PERIOD);
-        end
-        @(posedge clk);  // end delimiter
-        rx <= 1'b1;
-        #(BAUD_TIME_PERIOD);
+            for (int i=0;i<UART_WIDTH;i++) begin:data  //data
+                @(posedge clk);
+                void'(std::randomize(rx));
+                #(BAUD_TIME_PERIOD);
+            end
+            @(posedge clk);  // end delimiter
+            rx <= 1'b1;
+            #(BAUD_TIME_PERIOD);
 
+        end
     end
+    $stop;
 end
 
 endmodule:data_encoder_decoder_tb

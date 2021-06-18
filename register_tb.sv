@@ -34,10 +34,16 @@ initial begin
 
     repeat(10) begin
         @(posedge clk);
-        std::randomize(dataIn);
-        std::randomize(wrEn);
-        std::randomize(rstN);
+        // void'(std::randomize(dataIn));
+        dataIn = $random();
+        wrEn = $random();
+        rstN = $random();
+        // void'(std::randomize(wrEn));
+        // void'(std::randomize(rstN));
     end
+    
+    @(posedge clk);
+    $stop;
 end
 
 endmodule: register_tb

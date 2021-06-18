@@ -4,7 +4,7 @@ class rand_num #(WIDTH);
     constraint c {num inside {[-2**(WIDTH-1): 2**(WIDTH-1)-1]};}
 
     function new();
-    this.randomize();   
+        void'(this.randomize());   
     endfunction
 endclass
 
@@ -61,6 +61,8 @@ initial begin
         x = std::randomize(incEn);
         x = std::randomize(rstN);
     end
+
+    $stop;
 end
 
 initial begin

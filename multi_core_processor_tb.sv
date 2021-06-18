@@ -144,6 +144,7 @@ always_ff @(posedge clk) begin
         $display("\nMatrix R\n");
         print_matrix_R(data_mem.RAM,a,c,R_start_addr,R_end_addr,CORE_COUNT);
 
+        repeat(5) @(posedge clk);  // end of the simulation
         $stop;
     end
 end
