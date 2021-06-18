@@ -50,13 +50,13 @@ initial begin
     for (int i = 0; i < 10 ;i++ ) begin
         @(posedge clk);
         selectIn <= bus_in_sel_t'(i);
-        $display("busOut = %d", busOut);
+        $display("selectIn = %d busOut = %d", i, busOut);
     end
 
     repeat(10) begin
         @(posedge clk);
         void'(std::randomize(selectIn));
-        $display("busOut = %d", busOut); 
+        $display("selectIn = %d busOut = %d", selectIn, busOut); 
     end
 
     $stop;

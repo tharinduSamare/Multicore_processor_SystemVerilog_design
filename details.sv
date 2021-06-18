@@ -8,7 +8,7 @@ typedef enum logic [2:0]{
     sub_alu =  3'd3,
     mul_alu =  3'd4,
     inc_alu =  3'd5,
-    idle_alu = 3'dx
+    idle_alu = 3'd6
 } alu_op_t;
 
 typedef enum logic [3:0]{

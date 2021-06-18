@@ -161,4 +161,14 @@ initial begin
 
 end
 
+initial begin         // simulation stop condition
+    forever begin
+        @(posedge clk);
+        if (done) begin
+            #(5*CLK_PERIOD);
+            $stop;
+        end
+    end
+end
+
 endmodule : controlUnit_tb

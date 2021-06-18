@@ -1,4 +1,4 @@
-module alu_tb();
+module alu_tb import details::*;();
 
 timeunit 1ns;
 timeprecision 1ps;
@@ -14,7 +14,7 @@ end
 localparam WIDTH = 12;
 
 logic signed [WIDTH-1:0]a,b,c;
-logic [2:0]selectOp;
+alu_op_t selectOp;
 
 alu #(.WIDTH(WIDTH))dut(.*);
 
@@ -22,54 +22,56 @@ initial begin
     @(posedge clk);
     a <= 10;
     b <= 3;
-    selectOp <= 0;
+    selectOp <= clr_alu;
 
     @(posedge clk);
-    selectOp <= 1;
+    selectOp <= pass_alu;
 
     @(posedge clk);
-    selectOp <= 2;
+    selectOp <= add_alu;
 
     @(posedge clk);
-    selectOp <= 3;
+    selectOp <= sub_alu;
 
     @(posedge clk);
-    selectOp <= 4;
+    selectOp <= mul_alu;
 
     @(posedge clk);
-    selectOp <= 5;
+    selectOp <= inc_alu;
 
     @(posedge clk);
-    selectOp <= 6;
+    selectOp <= idle_alu;
 
     @(posedge clk);
     a <= 20;
     b <= -30;
-    selectOp <= 0;
+    selectOp <= clr_alu;
 
     @(posedge clk);
-    selectOp <= 1;
+    selectOp <= pass_alu;
 
     @(posedge clk);
-    selectOp <= 2;
+    selectOp <= add_alu;
 
     @(posedge clk);
-    selectOp <= 3;
+    selectOp <= sub_alu;
 
     @(posedge clk);
-    selectOp <= 4;
+    selectOp <= mul_alu;
 
     @(posedge clk);
-    selectOp <= 5;
+    selectOp <= inc_alu;
 
     @(posedge clk);
-    selectOp <= 6;
+    selectOp <= idle_alu;
 
+    @(posedge clk);
     repeat(10) begin
         @(posedge clk);
-        std::randomize(a) ;
-        std::randomize(b);
-        std::randomize(selectOp);
+        void'(std::randomize(a)) ;
+        void'(std::randomize(b));
+        void'(std::randomize(selectOp));
     end
+    $stop;
 end
 endmodule:alu_tb
