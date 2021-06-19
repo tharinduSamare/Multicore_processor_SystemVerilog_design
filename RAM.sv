@@ -17,29 +17,8 @@ logic [ADDR_WIDTH-1:0]addr_reg;
 
 logic [WIDTH-1:0]memory[0:DEPTH-1] ;
 
-// always_ff @( posedge clk) begin
-//     // wrEn_reg <= wrEn;
-//     addr_reg <= addr;
-//     // dataIn_reg <= dataIn;
-// end
-
-// always_ff @(posedge clk) begin
-//     // dataOut <= memory[addr];
-//     if (wrEn) begin
-//         memory[addr] <= dataIn;
-//     end
-// end
-
-// assign dataOut = memory[addr_reg];
-//////////// original
-always_ff @( posedge clk) begin
-    wrEn_reg <= wrEn;
-    addr_reg <= addr;
-    dataIn_reg <= dataIn;
-end
-
 always_ff @(posedge clk) begin
-    // dataOut <= memory[addr];
+    addr_reg <= addr;
     if (wrEn) begin
         memory[addr] <= dataIn;
     end

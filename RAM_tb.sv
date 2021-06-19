@@ -53,7 +53,7 @@ initial begin
 
     repeat (20) begin
         @(posedge clk);
-        #(CLK_PERIOD*4/5);
+        #(CLK_PERIOD*4/5);    // to give data litte bit earlier to the posedge of the clk
         dataIn_r = new();
         addr_r = new();
         wrEn_r = new();
