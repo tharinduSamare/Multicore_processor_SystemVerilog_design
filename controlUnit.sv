@@ -158,12 +158,12 @@ always_comb begin
 
         STIR_DELAY1 : nextState <= STIR1;       // extra_delay for memory read
         STIR1 : nextState <= STIR2;
-        STIR2 : nextState <= STIR3;
-        // STIR_DELAY2 : nextState <= STIR3;         // extra_delay for memory write
+        STIR2 : nextState <= STIR_DELAY2;
+        STIR_DELAY2 : nextState <= STIR3;         // extra_delay for memory write
         STIR3 : nextState <= FETCH_DELAY1;
 
-        STR1 : nextState <= STR2;
-        // STR_DELAY1 : nextState <= STR2;         // extra_delay for memory write
+        STR1 : nextState <= STR_DELAY1;
+        STR_DELAY1 : nextState <= STR2;         // extra_delay for memory write
         STR2 : nextState <= FETCH1;
 
         JUMP_DELAY1 : nextState <= JUMP1;        // extra_delay for memory read
