@@ -7,7 +7,7 @@ module toFpga (
 	output logic UART_TXD
 );
 
-localparam CORE_COUNT = 1;
+localparam CORE_COUNT = 4;
 localparam REG_WIDTH = 12;
 localparam DATA_MEM_WIDTH = CORE_COUNT * REG_WIDTH;
 localparam INS_WIDTH = 8;
