@@ -41,7 +41,8 @@ typedef enum logic [3:0] {
     receive_0  = 4'd5,
     receive_1  = 4'd6,
     receive_2  = 4'd7,
-    receive_1_1= 4'd8
+    receive_1_1= 4'd8,
+    receive_1_2= 4'd9
 } state_t;
 
 state_t currentState, nextState;
@@ -120,6 +121,10 @@ always_comb begin
         end
         
         receive_1_1: begin
+            nextState = receive_1_2;
+        end
+
+        receive_1_2: begin
             nextState = receive_2;
         end
 
