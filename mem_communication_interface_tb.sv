@@ -94,14 +94,17 @@ mem_communication_interface #(.MEM_WORD_LENGTH(MEM_WORD_LENGTH), .MEM_DEPTH(MEM_
 uart_system #(.DATA_WIDTH(UART_WIDTH), .BAUD_RATE(BAUD_RATE)) uart_system(.clk, .rstN,.txByteStart,.rx,.byteForTx,
                 .tx, .tx_ready(txByteReady), .rx_ready(rxByteReady), .rx_new_byte_indicate, .byteFromRx);
 
-////////////memory read and write
-always_ff @(posedge clk) begin
-    Memory_a.Read_memory(.addr(mem_address), .value(dataFromMem), .clk(clk));
-end
+RAM #(.WIDTH(MEM_WORD_LENGTH), .DEPTH(MEM_DEPTH)) RAM(.clk, .wrEn(memWrEn), .dataIn(dataToMem), .addr(mem_address), 
+        .dataOut(dataFromMem));
 
-always_ff @(posedge clk) begin
-    Memory_a.Write_memory(.addr(mem_address), .data(dataToMem), .wrEn(memWrEn), .clk(clk));
-end
+////////////memory read and write
+// always_ff @(posedge clk) begin
+//     Memory_a.Read_memory(.addr(mem_address), .value(dataFromMem), .clk(clk));
+// end
+
+// always_ff @(posedge clk) begin
+//     Memory_a.Write_memory(.addr(mem_address), .data(dataToMem), .wrEn(memWrEn), .clk(clk));
+// end
 
 
 // test transmission 
@@ -117,16 +120,16 @@ initial begin
     toggle_addr_range <= toggle_addr_range_val;
 
     //////// transmission testing starts here
-    @(posedge clk);
-    rstN <= 1'b1;
-    txStartN <= 1'b0;
-    @(posedge clk);
-    txStartN <= 1'b1;
-    wait(mem_transmitted);
+    // @(posedge clk);
+    // rstN <= 1'b1;
+    // txStartN <= 1'b0;
+    // @(posedge clk);
+    // txStartN <= 1'b1;
+    // wait(mem_transmitted);
 
-    @(posedge clk);
-    repeat(5) @(posedge clk);
-    $display("transmission is done \n");
+    // @(posedge clk);
+    // repeat(5) @(posedge clk);
+    // $display("transmission is done \n");
     ///////////////// receiver testing starts here
 
     @(posedge clk);
@@ -152,7 +155,7 @@ initial begin
         $display("dataToMem = %x", dataToMem);
     end
     
-    $display("receiving is done \n%p",Memory_a.memory);
+    // $display("receiving is done \n%p",Memory_a.memory);
     
     $stop;  // end of the simulation
 end
