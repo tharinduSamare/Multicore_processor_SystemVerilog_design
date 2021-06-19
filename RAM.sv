@@ -19,9 +19,9 @@ logic [WIDTH-1:0]memory[0:DEPTH-1] ;
 always_ff @(posedge clk) begin
     addr_reg <= addr;
     if (wrEn) begin
-        memory[addr] <= dataIn;
+        memory[addr] <= dataIn;   // write requires only 1 clk cyle. 
     end
 end
-assign dataOut = memory[addr_reg];
+assign dataOut = memory[addr_reg];   // address is registered. Need 2 clk cycles to read.
 
 endmodule : RAM
