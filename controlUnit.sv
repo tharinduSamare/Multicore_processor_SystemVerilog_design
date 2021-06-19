@@ -22,40 +22,40 @@ typedef enum logic [5:0] {
 
     CLAC1 = 6'd3,
 
-    FETCH_DELAY1 = 6'd37,         /////************** (extra_delay for memory ip core)
+    FETCH_DELAY1 = 6'd37,         /////************** (extra_delay for memory read)
     FETCH1 = 6'd4,
     FETCH2 = 6'd5,
 
-    LDIAC_DELAY1 =  6'd38,         /////************** (extra_delay for memory ip core)
+    LDIAC_DELAY1 =  6'd38,         /////************** (extra_delay for memory read)
     LDIAC1 = 6'd6,
     LDIAC2 = 6'd7,
-    LDIAC_DELAY2 = 6'd39,         /////************** (extra_delay for memory ip core)
+    LDIAC_DELAY2 = 6'd39,         /////************** (extra_delay for memory read)
     LDIAC3 = 6'd8,
 
     LDAC1 = 6'd9,
-    LDAC_DELAY1 = 6'd40,         /////************** (extra_delay for memory ip core)
+    LDAC_DELAY1 = 6'd40,         /////************** (extra_delay for memory read)
     LDAC2 = 6'd10,
 
-    STIR_DELAY1 = 6'd41,         /////************** (extra_delay for memory ip core)
+    STIR_DELAY1 = 6'd41,         /////************** (extra_delay for memory read)
     STIR1 = 6'd11,
     STIR2 = 6'd12,
-    STIR_DELAY2 = 6'd42,         /////************** (extra_delay for memory ip core)
+    STIR_DELAY2 = 6'd42,         /////************** (extra_delay for memory write)
     STIR3 = 6'd13,
 
     STR1 = 6'd14,
-    STR_DELAY1 = 6'd43,         /////************** (extra_delay for memory ip core)
+    STR_DELAY1 = 6'd43,         /////************** (extra_delay for memory write)
     STR2 = 6'd15,
 
-    JUMP_DELAY1 = 6'd44,         /////************** (extra_delay for memory ip core)
+    JUMP_DELAY1 = 6'd44,         /////************** (extra_delay for memory read)
     JUMP1 = 6'd16,
     JUMP2 = 6'd17,
     
-    JMPNZY_DILAY1 = 6'd45,         /////************** (extra_delay for memory ip core)
+    JMPNZY_DILAY1 = 6'd45,         /////************** (extra_delay for memory read)
     JMPNZY1 = 6'd18,
     JMPNZY2 = 6'd19,
     JMPNZN1 = 6'd20,
 
-    JMPZY_DELAY1 = 6'd46,         /////************** (extra_delay for memory ip core)
+    JMPZY_DELAY1 = 6'd46,         /////************** (extra_delay for memory read)
     JMPZY1 = 6'd21,
     JMPZY2 = 6'd22,
     JMPZN1 = 6'd23,
@@ -115,20 +115,20 @@ always_comb begin
 
         CLAC1 : nextState <= FETCH1;
 
-        FETCH_DELAY1 : nextState <= FETCH1;        /////************** (extra_delay for memory ip core)
+        FETCH_DELAY1 : nextState <= FETCH1;        // extra_delay for memory read
         FETCH1 : nextState <= FETCH2;
         FETCH2 : begin
             unique case(instruction)
                 NOP: nextState <= NOP1;
                 ENDOP: nextState <= ENDOP1;
                 CLAC: nextState <= CLAC1;
-                LDIAC: nextState <= LDIAC_DELAY1; //*********************
+                LDIAC: nextState <= LDIAC_DELAY1; 
                 LDAC: nextState <= LDAC1;
                 STR: nextState <= STR1;
-                STIR: nextState <= STIR_DELAY1;  //*******************  
-                JUMP: nextState <= JUMP_DELAY1;  /////*****************
-                JMPNZ: nextState <= (Zout == 0)? JMPNZY_DILAY1 : JMPNZN1; //******************
-                JMPZ: nextState <= (Zout == 1)? JMPZY_DELAY1 : JMPZN1;  //**********************
+                STIR: nextState <= STIR_DELAY1;  // extra_delay for memory read
+                JUMP: nextState <= JUMP_DELAY1;  // extra_delay for memory read
+                JMPNZ: nextState <= (Zout == 0)? JMPNZY_DILAY1 : JMPNZN1; // extra_delay for memory read
+                JMPZ: nextState <= (Zout == 1)? JMPZY_DELAY1 : JMPZN1;  // extra_delay for memory read
                 MUL: nextState <= MUL1;
                 ADD: nextState <= ADD1;
                 SUB: nextState <= SUB1;
@@ -146,36 +146,36 @@ always_comb begin
             endcase
         end
 
-        LDIAC_DELAY1 : nextState <= LDIAC1;        /////************** (extra_delay for memory ip core)
+        LDIAC_DELAY1 : nextState <= LDIAC1;        // extra_delay for memory read
         LDIAC1 : nextState <= LDIAC2;
         LDIAC2 : nextState <= LDIAC_DELAY2;
-        LDIAC_DELAY2 : nextState <= LDIAC3;       /////************** (extra_delay for memory ip core)
+        LDIAC_DELAY2 : nextState <= LDIAC3;       // extra_delay for memory read
         LDIAC3 : nextState <= FETCH_DELAY1;
 
         LDAC1 : nextState <= LDAC_DELAY1;
-        LDAC_DELAY1 : nextState <= LDAC2;        /////************** (extra_delay for memory ip core)
+        LDAC_DELAY1 : nextState <= LDAC2;        // extra_delay for memory read
         LDAC2 : nextState <= FETCH_DELAY1;
 
-        STIR_DELAY1 : nextState <= STIR1;       /////************** (extra_delay for memory ip core)
+        STIR_DELAY1 : nextState <= STIR1;       // extra_delay for memory read
         STIR1 : nextState <= STIR2;
-        STIR2 : nextState <= STIR_DELAY2;
-        STIR_DELAY2 : nextState <= STIR3;         /////************** (extra_delay for memory ip core)
+        STIR2 : nextState <= STIR3;
+        // STIR_DELAY2 : nextState <= STIR3;         // extra_delay for memory write
         STIR3 : nextState <= FETCH_DELAY1;
 
-        STR1 : nextState <= STR_DELAY1;
-        STR_DELAY1 : nextState <= STR2;         /////************** (extra_delay for memory ip core)
+        STR1 : nextState <= STR2;
+        // STR_DELAY1 : nextState <= STR2;         // extra_delay for memory write
         STR2 : nextState <= FETCH1;
 
-        JUMP_DELAY1 : nextState <= JUMP1;        /////************** (extra_delay for memory ip core)
+        JUMP_DELAY1 : nextState <= JUMP1;        // extra_delay for memory read
         JUMP1 : nextState <= JUMP2;
         JUMP2 : nextState <= FETCH_DELAY1;
         
-        JMPNZY_DILAY1 : nextState <= JMPNZY1;        /////************** (extra_delay for memory ip core)
+        JMPNZY_DILAY1 : nextState <= JMPNZY1;        // extra_delay for memory read
         JMPNZY1 : nextState <= JMPNZY2;
         JMPNZY2 : nextState <= FETCH_DELAY1;
         JMPNZN1 : nextState <= FETCH_DELAY1;
 
-        JMPZY_DELAY1 : nextState <= JMPZY1;         /////************** (extra_delay for memory ip core)
+        JMPZY_DELAY1 : nextState <= JMPZY1;         // extra_delay for memory read
         JMPZY1 : nextState <= JMPZY2;
         JMPZY2 : nextState <= FETCH_DELAY1;
         JMPZN1 : nextState <= FETCH_DELAY1;
