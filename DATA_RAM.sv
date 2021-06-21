@@ -11,7 +11,7 @@ module DATA_RAM import details::*;
     input logic [ADDR_WIDTH-1:0]addr,
     output logic [WIDTH-1:0]dataOut,
 
-    input logic processDone
+    input logic processDone   // need only for simulation (to get the memory at the end)
 );
 
 
@@ -28,7 +28,7 @@ end
 
 always_comb begin
     if (processDone) begin
-        $writememb("../../7_multiply_answer.txt", memory);
+        $writememb("../../11_data_mem_out.txt", memory);
     end
 end
 

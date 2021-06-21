@@ -13,7 +13,7 @@ initial begin
     end
 end
 
-localparam CORE_COUNT = 2;
+localparam CORE_COUNT = 1;
 
 logic rstN, startN;
 logic processor_ready, processDone;
