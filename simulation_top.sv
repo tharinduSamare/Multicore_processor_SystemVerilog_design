@@ -1,10 +1,13 @@
 module simulation_top import details::*;
+#(
+    parameter CORE_COUNT = 1
+)
 (
     input logic clk, rstN, startN,
-    output processor_ready, processDone
+    output logic processor_ready, processDone
 );
 
-localparam CORE_COUNT = 2;
+// localparam CORE_COUNT = 2;
 localparam REG_WIDTH = 12;
 localparam DATA_MEM_WIDTH = CORE_COUNT * REG_WIDTH;
 localparam INS_WIDTH = 8;
@@ -97,7 +100,7 @@ multi_core_processor #(.REG_WIDTH(REG_WIDTH), .INS_WIDTH(INS_WIDTH), .CORE_COUNT
         IM(.clk(clk), .wrEn(uart_InsMemWrEn), .dataIn(InsMemIn), .addr(insMemAddr), .dataOut(InsMemOut));
 
  DATA_RAM #(.WIDTH(DATA_MEM_WIDTH), .DEPTH(DATA_MEM_DEPTH), .mem_init(yes)) 
-        DM(.clk(clk), .wrEn(dataMemWrEn), .dataIn(DataMemIn), .addr(dataMemAddr), .dataOut(DataMemOut));
+        DM(.clk(clk), .wrEn(dataMemWrEn), .dataIn(DataMemIn), .addr(dataMemAddr), .dataOut(DataMemOut), .processDone(processDone));
 
 
 endmodule :simulation_top

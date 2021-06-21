@@ -20,7 +20,7 @@ logic [WIDTH-1:0]memory[0:DEPTH-1] ;
 /// initialize memory for simulation  /////////
 initial begin
     if (mem_init == yes) begin
-        $readmemb("9_ins_mem_tb.txt", memory);
+        $readmemb("../../9_ins_mem_tb.txt", memory);
     end
 end
 ///////////////////////////////////////////////

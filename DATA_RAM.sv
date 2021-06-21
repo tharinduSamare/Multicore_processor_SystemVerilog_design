@@ -9,7 +9,9 @@ module DATA_RAM import details::*;
     input logic clk, wrEn,
     input logic [WIDTH-1:0]dataIn,
     input logic [ADDR_WIDTH-1:0]addr,
-    output logic [WIDTH-1:0]dataOut
+    output logic [WIDTH-1:0]dataOut,
+
+    input logic processDone
 );
 
 
@@ -20,9 +22,16 @@ logic [WIDTH-1:0]memory[0:DEPTH-1] ;
 /// initialize memory for simulation  /////////
 initial begin
     if (mem_init == yes) begin
-        $readmemb("4_data_mem_tb.txt", memory);
+        $readmemb("../../4_data_mem_tb.txt", memory);
     end
 end
+
+always_comb begin
+    if (processDone) begin
+        $writememb("../../7_multiply_answer.txt", memory);
+    end
+end
+
 ///////////////////////////////////////////////
 
 always_ff @(posedge clk) begin
