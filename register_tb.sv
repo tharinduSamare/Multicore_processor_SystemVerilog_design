@@ -2,7 +2,7 @@ module register_tb();
 
 timeunit 1ns;
 timeprecision 1ps;
-localparam CLK_PERIOD = 10;
+localparam CLK_PERIOD = 20;
 
 logic clk;
 initial begin
