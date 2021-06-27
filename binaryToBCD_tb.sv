@@ -48,7 +48,7 @@ initial begin
         #(LATENCY);
         @(posedge clk);
         start <= 0;
-        void'(std::randomize(binary_value));
+        binary_value = $random();
 
         @(posedge clk);
         start <= 1;

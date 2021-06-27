@@ -1,14 +1,3 @@
-class rand_num #(WIDTH);
-
-    rand bit signed [WIDTH-1:0] num;
-    constraint c {num inside {[-2**(WIDTH-1): 2**(WIDTH-1)-1]};}
-
-    function new();
-        void'(this.randomize());   
-    endfunction
-endclass
-
-
 module incRegister_tb();
 
 timeunit 1ns;
@@ -31,35 +20,38 @@ logic wrEn, incEn, rstN;
 
 incRegister #(.WIDTH(WIDTH)) dut(.*);
 
-rand_num #(.WIDTH(WIDTH)) dataIn_r;
+// rand_num #(.WIDTH(WIDTH)) dataIn_r;
 
-bit x;
+// bit x;
 initial begin
     @(posedge clk);
+    #(CLK_PERIOD*4/5);
     rstN <= 0;
 
     @(posedge clk);
+    #(CLK_PERIOD*4/5);
     dataIn <= 23;
     wrEn <= 1;
 
     @(posedge clk);
+    #(CLK_PERIOD*4/5);
     dataIn <= 36;
     wrEn <= 1;
     rstN <= 1;
 
     @(posedge clk);
+    #(CLK_PERIOD*4/5);
     dataIn <= 15;
     wrEn <= 0;
     incEn <= 1;
 
     repeat (10) begin
         @(posedge clk);
-        dataIn_r = new();
-        dataIn <= dataIn_r.num;
-        // std::randomize(dataIn);
-        x = std::randomize(wrEn);
-        x = std::randomize(incEn);
-        x = std::randomize(rstN);
+        #(CLK_PERIOD*4/5);
+        dataIn = $random();
+        wrEn = $random();
+        incEn = $random();
+        rstN = $random();
     end
 
     $stop;
@@ -68,6 +60,7 @@ end
 initial begin
     forever begin
        @(posedge clk);
+       #(CLK_PERIOD*4/5);
         $display("dataIn = %d   rstN = %b    wrEn = %b   incEn = %b    dataOut = %d", dataIn, rstN, wrEn, incEn, dataOut);  
     end
     

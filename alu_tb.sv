@@ -3,7 +3,7 @@ module alu_tb import details::*;();
 timeunit 1ns;
 timeprecision 1ps;
 
-localparam CLK_PERIOD = 10;
+localparam CLK_PERIOD = 20;
 
 logic clk;
 initial begin
@@ -68,9 +68,9 @@ initial begin
     @(posedge clk);
     repeat(10) begin
         @(posedge clk);
-        void'(std::randomize(a)) ;
-        void'(std::randomize(b));
-        void'(std::randomize(selectOp));
+        a = $random();
+        b = $random();
+        selectOp = alu_op_t'($random());
     end
     $stop;
 end

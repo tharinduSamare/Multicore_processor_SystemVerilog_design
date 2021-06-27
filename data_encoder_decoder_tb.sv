@@ -57,7 +57,7 @@ initial begin
         @(posedge clk);
         wait(txReady);
         @(posedge clk);
-        void'(std::randomize(dataFromMem));
+        dataFromMem = $random();
         txStart <= 1'b1;
 
         @(posedge clk);
@@ -81,7 +81,7 @@ initial begin
             #(BAUD_TIME_PERIOD);
             for (int i=0;i<UART_WIDTH;i++) begin:data  //data
                 @(posedge clk);
-                void'(std::randomize(rx));
+                rx = $random();
                 #(BAUD_TIME_PERIOD);
             end
             @(posedge clk);  // end delimiter

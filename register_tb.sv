@@ -21,28 +21,29 @@ register #(.WIDTH(WIDTH)) dut(.*);
 
 initial begin
     @(posedge clk);
+    #(CLK_PERIOD*4/5);
     rstN <= 0;
 
     @(posedge clk);
+    #(CLK_PERIOD*4/5);
     rstN <= 1;
     dataIn <= 20;
     wrEn <= 0;
 
     @(posedge clk);
+    #(CLK_PERIOD*4/5);
     dataIn <= 43;
     wrEn <= 1;
 
     repeat(10) begin
         @(posedge clk);
-        // void'(std::randomize(dataIn));
+        #(CLK_PERIOD*4/5);
         dataIn = $random();
         wrEn = $random();
         rstN = $random();
-        // void'(std::randomize(wrEn));
-        // void'(std::randomize(rstN));
     end
     
-    @(posedge clk);
+    repeat(2) @(posedge clk);
     $stop;
 end
 

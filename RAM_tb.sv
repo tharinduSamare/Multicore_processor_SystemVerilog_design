@@ -1,13 +1,3 @@
-class Rand_Num #(WIDTH);
-    rand bit [WIDTH-1:0]num;
-
-    function new();
-        void'(this.randomize());      
-    endfunction
-    
-endclass
-
-
 module RAM_tb();
 
 timeunit 1ns;
@@ -34,10 +24,6 @@ addr_t addr;
 
 RAM #(.WIDTH(WIDTH), .DEPTH(DEPTH), .ADDR_WIDTH(ADDR_WIDTH)) dut(.*);
 
-Rand_Num #(.WIDTH(WIDTH)) dataIn_r;
-Rand_Num #(.WIDTH(ADDR_WIDTH)) addr_r;
-Rand_Num #(.WIDTH(1)) wrEn_r;
-
 initial begin
     @(posedge clk);
     #(CLK_PERIOD*4/5);
@@ -54,13 +40,10 @@ initial begin
     repeat (20) begin
         @(posedge clk);
         #(CLK_PERIOD*4/5);    // to give data litte bit earlier to the posedge of the clk
-        dataIn_r = new();
-        addr_r = new();
-        wrEn_r = new();
 
-        dataIn <= dataIn_r.num;
-        addr <= addr_r.num;
-        wrEn <= wrEn_r.num;
+        dataIn = $random();
+        addr = $random();
+        wrEn = $random();
     end    
 
     $stop;
