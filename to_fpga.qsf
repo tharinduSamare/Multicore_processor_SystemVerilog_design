@@ -1230,6 +1230,8 @@ set_instance_assignment -name IO_STANDARD LVDS -to HSMC_TX_D_N[16]
 set_instance_assignment -name IO_STANDARD LVDS -to HSMC_RX_D_N[16]
 set_instance_assignment -name IO_STANDARD LVDS -to HSMC_CLKOUT_N2
 set_instance_assignment -name IO_STANDARD LVDS -to HSMC_CLKOUT_N1
+set_global_assignment -name SYSTEMVERILOG_FILE SSeg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE convertToHEX.sv
 set_global_assignment -name SYSTEMVERILOG_FILE toFpga.sv
 set_global_assignment -name SYSTEMVERILOG_FILE hex_display.sv
 set_global_assignment -name SYSTEMVERILOG_FILE RAM.sv
