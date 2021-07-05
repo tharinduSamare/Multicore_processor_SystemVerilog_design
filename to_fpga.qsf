@@ -644,33 +644,6 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME uart_transmitter_tb -sect
 set_global_assignment -name EDA_TEST_BENCH_NAME simulation_top_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id simulation_top_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME simulation_top_tb -section_id simulation_top_tb
-set_global_assignment -name SYSTEMVERILOG_FILE RAM.sv
-set_global_assignment -name SYSTEMVERILOG_FILE INS_RAM.sv
-set_global_assignment -name SYSTEMVERILOG_FILE DATA_RAM.sv
-set_global_assignment -name SYSTEMVERILOG_FILE simulation_top.sv
-set_global_assignment -name SYSTEMVERILOG_FILE multi_core_processor.sv
-set_global_assignment -name SYSTEMVERILOG_FILE toFpga.sv
-set_global_assignment -name SYSTEMVERILOG_FILE convertToHEX.sv
-set_global_assignment -name SYSTEMVERILOG_FILE hex_display.sv
-set_global_assignment -name SYSTEMVERILOG_FILE uart_transmitter.sv
-set_global_assignment -name SYSTEMVERILOG_FILE uart_system.sv
-set_global_assignment -name SYSTEMVERILOG_FILE uart_receiver.sv
-set_global_assignment -name SYSTEMVERILOG_FILE mem_communication_interface.sv
-set_global_assignment -name SYSTEMVERILOG_FILE data_encoder_decoder.sv
-set_global_assignment -name SYSTEMVERILOG_FILE uart_baudRateGen.sv
-set_global_assignment -name SYSTEMVERILOG_FILE timeCounter.sv
-set_global_assignment -name SYSTEMVERILOG_FILE details.sv
-set_global_assignment -name SYSTEMVERILOG_FILE binaryToBCD.sv
-set_global_assignment -name SYSTEMVERILOG_FILE SSeg.sv
-set_global_assignment -name SYSTEMVERILOG_FILE processor.sv
-set_global_assignment -name SYSTEMVERILOG_FILE controlUnit.sv
-set_global_assignment -name SYSTEMVERILOG_FILE zReg.sv
-set_global_assignment -name SYSTEMVERILOG_FILE multiplexer.sv
-set_global_assignment -name SYSTEMVERILOG_FILE register.sv
-set_global_assignment -name SYSTEMVERILOG_FILE incRegister.sv
-set_global_assignment -name SYSTEMVERILOG_FILE alu.sv
-set_global_assignment -name QIP_FILE IP_insMem.qip
-set_global_assignment -name QIP_FILE IP_dataMem.qip
 set_global_assignment -name EDA_TEST_BENCH_FILE alu_tb.sv -section_id alu_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE incRegister_tb.sv -section_id incRegister_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE register_tb.sv -section_id register_tb
@@ -1257,4 +1230,26 @@ set_instance_assignment -name IO_STANDARD LVDS -to HSMC_TX_D_N[16]
 set_instance_assignment -name IO_STANDARD LVDS -to HSMC_RX_D_N[16]
 set_instance_assignment -name IO_STANDARD LVDS -to HSMC_CLKOUT_N2
 set_instance_assignment -name IO_STANDARD LVDS -to HSMC_CLKOUT_N1
+set_global_assignment -name SYSTEMVERILOG_FILE toFpga.sv
+set_global_assignment -name SYSTEMVERILOG_FILE hex_display.sv
+set_global_assignment -name SYSTEMVERILOG_FILE RAM.sv
+set_global_assignment -name SYSTEMVERILOG_FILE INS_RAM.sv
+set_global_assignment -name SYSTEMVERILOG_FILE DATA_RAM.sv
+set_global_assignment -name SYSTEMVERILOG_FILE simulation_top.sv
+set_global_assignment -name SYSTEMVERILOG_FILE multi_core_processor.sv
+set_global_assignment -name SYSTEMVERILOG_FILE uart_transmitter.sv
+set_global_assignment -name SYSTEMVERILOG_FILE uart_system.sv
+set_global_assignment -name SYSTEMVERILOG_FILE uart_receiver.sv
+set_global_assignment -name SYSTEMVERILOG_FILE mem_communication_interface.sv
+set_global_assignment -name SYSTEMVERILOG_FILE data_encoder_decoder.sv
+set_global_assignment -name SYSTEMVERILOG_FILE uart_baudRateGen.sv
+set_global_assignment -name SYSTEMVERILOG_FILE details.sv
+set_global_assignment -name SYSTEMVERILOG_FILE binaryToBCD.sv
+set_global_assignment -name SYSTEMVERILOG_FILE processor.sv
+set_global_assignment -name SYSTEMVERILOG_FILE controlUnit.sv
+set_global_assignment -name SYSTEMVERILOG_FILE zReg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE multiplexer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE register.sv
+set_global_assignment -name SYSTEMVERILOG_FILE incRegister.sv
+set_global_assignment -name SYSTEMVERILOG_FILE alu.sv
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
