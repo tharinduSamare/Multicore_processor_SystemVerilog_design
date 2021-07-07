@@ -68,6 +68,7 @@ task automatic test_instruction(
 );
     
     @(posedge clk);
+    #(CLK_PERIOD*4/5);
     instruction = ins;
     Zout = Z_value;
 
@@ -79,8 +80,10 @@ endtask
 
 initial begin
     @(posedge clk);
+    #(CLK_PERIOD*4/5);
     rstN <= 1'b0;
     @(posedge clk);
+    #(CLK_PERIOD*4/5);
     rstN <= 1'b1;
     start <= 1'b1;
 
