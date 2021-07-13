@@ -22,13 +22,13 @@ logic [WIDTH-1:0]memory[0:DEPTH-1] ;
 /// initialize memory for simulation  /////////
 initial begin
     if (mem_init == yes) begin
-        $readmemb("../../4_data_mem_tb.txt", memory);
+        $readmemb("D:/ACA/SEM5_TRONIC_ACA/1_EN3030 _Circuits_and_Systems_Design/2020/learnFPGA/learn_processor_design/matrix_multiply/system_verilog_design_3_1_github/Multicore_processor_matrix_multiply/matrix_generation_for_tb/4_data_mem_tb.txt", memory);
     end
 end
 
 always_comb begin
     if (processDone) begin
-        $writememb("../../11_data_mem_out.txt", memory);
+        $writememb("D:/ACA/SEM5_TRONIC_ACA/1_EN3030 _Circuits_and_Systems_Design/2020/learnFPGA/learn_processor_design/matrix_multiply/system_verilog_design_3_1_github/Multicore_processor_matrix_multiply/matrix_generation_for_tb/11_data_mem_out.txt", memory);
     end
 end
 

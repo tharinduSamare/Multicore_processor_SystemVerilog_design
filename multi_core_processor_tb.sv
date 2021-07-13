@@ -83,8 +83,8 @@ logic [INS_WIDTH-1:0]temp_ins_mem[0:INS_MEM_DEPTH-1];
 logic [DATA_MEM_WIDTH-1:0]temp_data_mem[0:DATA_MEM_DEPTH-1];
 
 initial begin
-    $readmemb("../../9_ins_mem_tb.txt", temp_ins_mem);
-    $readmemb("../../4_data_mem_tb.txt", temp_data_mem);
+    $readmemb("D:/ACA/SEM5_TRONIC_ACA/1_EN3030 _Circuits_and_Systems_Design/2020/learnFPGA/learn_processor_design/matrix_multiply/system_verilog_design_3_1_github/Multicore_processor_matrix_multiply/matrix_generation_for_tb/9_ins_mem_tb.txt", temp_ins_mem);
+    $readmemb("D:/ACA/SEM5_TRONIC_ACA/1_EN3030 _Circuits_and_Systems_Design/2020/learnFPGA/learn_processor_design/matrix_multiply/system_verilog_design_3_1_github/Multicore_processor_matrix_multiply/matrix_generation_for_tb/4_data_mem_tb.txt", temp_data_mem);
     ins_mem.initialize_full_memory(temp_ins_mem);
     data_mem.initialize_full_memory(temp_data_mem);    
 end 
@@ -133,7 +133,7 @@ always_ff @(posedge clk) begin
 
         
         temp_data_mem_2 = data_mem.RAM;
-        $writememh("../../7_multiply_answer.txt", temp_data_mem_2, R_start_addr,R_end_addr); // write answer matrix to a file
+        $writememb("D:/ACA/SEM5_TRONIC_ACA/1_EN3030 _Circuits_and_Systems_Design/2020/learnFPGA/learn_processor_design/matrix_multiply/system_verilog_design_3_1_github/Multicore_processor_matrix_multiply/matrix_generation_for_tb/11_data_mem_out.txt", temp_data_mem_2); // write data memory content to a file
 
         $display("\nMatrix P\n");
         print_matrix_P(data_mem.RAM, a,b,P_start_addr, P_end_addr, CORE_COUNT);
@@ -144,7 +144,7 @@ always_ff @(posedge clk) begin
         $display("\nMatrix R\n");
         print_matrix_R(data_mem.RAM,a,c,R_start_addr,R_end_addr,CORE_COUNT);
 
-        repeat(5) @(posedge clk);  // end of the simulation
+        // repeat(5) @(posedge clk);  // end of the simulation
         $stop;
     end
 end
