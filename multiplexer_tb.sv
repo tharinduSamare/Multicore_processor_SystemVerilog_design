@@ -55,7 +55,6 @@ initial begin
 
     repeat(10) begin
         @(posedge clk);
-        // selectIn = bus_in_sel_t'($random());
         void'(std::randomize(selectIn));
         $display("selectIn = %d busOut = %d", selectIn, busOut); 
     end

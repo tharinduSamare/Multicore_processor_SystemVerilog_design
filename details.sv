@@ -73,5 +73,15 @@ typedef enum logic [9:0] {
     AC_wrEn = 10'b0000000001
 } wrEnReg_t;
 
+typedef enum logic [0:0]{
+    ins_mem = 1'b0,
+    data_mem = 1'b1
+} mem_t;
+
+typedef enum logic[0:0]{
+    no = 1'b0,
+    yes = 1'b1
+} mem_init_t;
+
 
 endpackage
