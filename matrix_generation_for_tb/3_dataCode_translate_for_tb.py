@@ -80,7 +80,7 @@ for i in range(0,4096,1):
     if (i<len(out)):
         machine_code.write(out[i]+'\n')
     else:
-        no_xx = "XXXXXXXXXXXX"*cores
+        no_xx = "000000000000"*cores
         machine_code.write(no_xx +"\n")
 machine_code.close()
 

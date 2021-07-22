@@ -72,7 +72,7 @@ for i in range(0,256,1):
         machine_code.write(decoded_code[i]+'\n')
     else:
         # print ("XXXXXXXX")
-        machine_code.write("XXXXXXXX"+"\n")
+        machine_code.write("00000000"+"\n")
 
 
 machine_code.close()

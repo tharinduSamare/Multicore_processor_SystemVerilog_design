@@ -1,27 +1,11 @@
-
-def getDataMemory(array_in):
-    DMem = []
-    for temp in (array_in):
-        if  (temp[1] != '['):
-            DMem.append(int(( "0b" + temp[11:-1]),2)) 
-        else:
-            begin = int (("0x" + temp[2:6]) , 16)
-            end = int(( "0x" + temp[8:12]),16)
-            value = int(( "0b" + temp[19:-1]),2)
-            no_of_values = end-begin + 1
-            DMem.extend([value]*no_of_values)
-    return DMem
-
 ##############################################################
 def decodeCombinedValues(valueIn,no_of_cores):
     if (no_of_cores == 1):
-        return [valueIn]
+        return [int(( "0b" + valueIn),2)]
     
     out = []
-    temp = bin(valueIn)[2:]
-    temp = format(int(temp), ('0'+str(12*no_of_cores)+'d'))
     for x in range(no_of_cores):
-        out.append(int(('0b' + temp[x*12:x*12+12]), 2))
+        out.append(int(('0b' + valueIn[x*12:x*12+12]), 2))
     return out
 
 ##################################################################
@@ -61,12 +45,11 @@ raw_data_size = 14  #data not belongs to matrix values
 start_R = raw_data_size + size_P + size_Q + 1  # extra 1 word space is given 
 end_R = start_R + size_R-1                     #in assembly code before answer matrix
 
-data = open('11_data_mem_output.mif', 'r')
-data_in = data.read().strip().split('\n')[23:-1]   #first 23 lines contains unnecessary data
+data = open('11_data_mem_out.txt', 'r')
+data_in = data.read().strip().split('\n')[3:-1]   #first 3 lines contains unnecessary data
 data.close()  
 
-DMem = getDataMemory(data_in)  # get all the matrix entries into a array
-matrix_initial = DMem[start_R:end_R+1]
+matrix_initial = data_in[start_R:end_R+1]
 matrix_second = []
 
 for x in matrix_initial:
@@ -81,7 +64,7 @@ for x in (matrix_R):
         writeFile.write(y + (6-len(y))*" ")
     writeFile.write('\n')
 writeFile.close()
-print(matrix_R)
+# print(matrix_R)
                 
 
 
