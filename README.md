@@ -9,3 +9,5 @@
   * Core-count can be changed as wished
   * Every core can access only the part of the memory allocated to it.
   * Communication happens by UART between PC and FPGA.
+
+[Demonstration of the design](https://youtu.be/A8b6QhjnlR8)
