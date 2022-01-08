@@ -24,6 +24,9 @@
 11. All the data are saved in text files in the [python_code_for_synthesis](https://github.com/tharinduSamare/Multicore_processor_matrix_multiply_SystemVerilog_design/tree/main/python_code_for_synthesis) folder.
 12. By pressing KEY[0] in the FPGA board, the system go to the initial (ready) state. (System reset)
 
+## Computational time vs Core count
+![plot](./images/speed_comparison.png)
+
 ## Simulation procedure
 1. Open Quartus Prime software and set the required module as Top-level Entity. (ex:- register.v)
 2. Do the Analysis & Elaboration.
